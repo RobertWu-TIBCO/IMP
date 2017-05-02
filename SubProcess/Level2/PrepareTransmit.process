@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/pe/DeployedVarsType" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <pd:name>SubProcess/Level2/PrepareTransmit.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="campaign_id" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="n_id" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="event_name" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="lastjson" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="isConversion" type="xsd:int" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>27</pd:startX>
+    <pd:startY>63</pd:startY>
+    <pd:returnBindings>
+        <root>
+            <xsl:if test="$CheckRedisPostBack/javaCodeActivityOutput/keytocheck">
+                <keytocheck>
+                    <xsl:value-of select="$CheckRedisPostBack/javaCodeActivityOutput/keytocheck"/>
+                </keytocheck>
+            </xsl:if>
+            <valuetocheck>
+                <xsl:value-of select="$CheckRedisPostBack/javaCodeActivityOutput/valuetocheck"/>
+            </valuetocheck>
+            <xsl:if test="$GetFromRedis/javaCodeActivityOutput/postback_istransmit">
+                <needTransimit>
+                    <xsl:value-of select="$GetFromRedis/javaCodeActivityOutput/postback_istransmit"/>
+                </needTransimit>
+            </xsl:if>
+            <xsl:if test="$GetFromRedis/javaCodeActivityOutput/postback_istransmit">
+                <postback_istransimit>
+                    <xsl:value-of select="$GetFromRedis/javaCodeActivityOutput/postback_istransmit"/>
+                </postback_istransimit>
+            </xsl:if>
+            <xsl:if test="$GetFromRedis/javaCodeActivityOutput/postback_synctype">
+                <postback_synctype>
+                    <xsl:value-of select="$GetFromRedis/javaCodeActivityOutput/postback_synctype"/>
+                </postback_synctype>
+            </xsl:if>
+            <xsl:if test="$GetFromRedis/javaCodeActivityOutput/postback_url">
+                <postback_url>
+                    <xsl:value-of select="$GetFromRedis/javaCodeActivityOutput/postback_url"/>
+                </postback_url>
+            </xsl:if>
+            <postback_transimit_parameter>
+                <xsl:value-of select="$GetFromRedis/javaCodeActivityOutput/postback_tramsmit_parameter"/>
+            </postback_transimit_parameter>
+        </root>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="keytocheck" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="valuetocheck" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="needTransimit" type="xsd:int" minOccurs="0"/>
+                    <xsd:element name="postback_istransimit" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="postback_synctype" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="postback_url" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="postback_transimit_parameter" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>403</pd:endX>
+    <pd:endY>63</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1488512401853</pd:targetNamespace>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>583</pd:x>
+        <pd:y>47</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Rethrow">
+        <pd:type>com.tibco.pe.core.RethrowActivity</pd:type>
+        <pd:resourceType>ae.activities.rethrow</pd:resourceType>
+        <pd:x>760</pd:x>
+        <pd:y>44</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="CheckRedisPostBack">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>282</pd:x>
+        <pd:y>157</pd:y>
+        <config>
+            <fileName>PrepareTransmitCheckRedisPostBack</fileName>
+            <packageName>SubProcess.Level2.PrepareTransmit</packageName>
+            <fullsource>package SubProcess.Level2.PrepareTransmit;
+import java.util.*;
+import java.io.*;
+import net.sf.json.JSONObject;  
+public class PrepareTransmitCheckRedisPostBack{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String keytocheck = "";
+	protected String lastjson = "";
+	protected int isConversion = 0;
+	protected String valuetocheck = "";
+	public String getkeytocheck() {
+		return keytocheck;
+	}
+	public void setkeytocheck(String val) {
+		keytocheck = val;
+	}
+	public String getlastjson() {
+		return lastjson;
+	}
+	public void setlastjson(String val) {
+		lastjson = val;
+	}
+	public int getisConversion() {
+		return isConversion;
+	}
+	public void setisConversion(int val) {
+		isConversion = val;
+	}
+	public String getvaluetocheck() {
+		return valuetocheck;
+	}
+	public void setvaluetocheck(String val) {
+		valuetocheck = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public PrepareTransmitCheckRedisPostBack() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String keytocheck
+	In  : String lastjson
+	In  : int isConversion
+	Out : String keytocheck
+	Out : String valuetocheck
+* Available Variables: DO NOT MODIFY *****/
+
+
+        JSONObject jsonOne = JSONObject.fromObject(lastjson);  
+	keytocheck=keytocheck.split(":")[0];
+        valuetocheck=(String)jsonOne.get(keytocheck.split(":")[0]);  }
+}
+</fullsource>
+            <inputData>
+                <row>
+                    <fieldName>keytocheck</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>lastjson</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>isConversion</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <outputData>
+                <row>
+                    <fieldName>keytocheck</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>valuetocheck</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <byteCode>
+                <class>
+                    <name>PrepareTransmitCheckRedisPostBack</name>
+                    <byteCode>yv66vgAAADMAPwkADAApCQAMACoJAAwAKwkADAAsCgANAC0IAC4KAC8AMAgAMQoACwAyCgAvADMHADQHADUHADYBAAprZXl0b2NoZWNrAQASTGphdmEvbGFuZy9TdHJpbmc7AQAIbGFzdGpzb24BAAxpc0NvbnZlcnNpb24BAAFJAQAMdmFsdWV0b2NoZWNrAQANZ2V0a2V5dG9jaGVjawEAFCgpTGphdmEvbGFuZy9TdHJpbmc7AQAEQ29kZQEAD0xpbmVOdW1iZXJUYWJsZQEADXNldGtleXRvY2hlY2sBABUoTGphdmEvbGFuZy9TdHJpbmc7KVYBAAtnZXRsYXN0anNvbgEAC3NldGxhc3Rqc29uAQAPZ2V0aXNDb252ZXJzaW9uAQADKClJAQAPc2V0aXNDb252ZXJzaW9uAQAEKEkpVgEAD2dldHZhbHVldG9jaGVjawEAD3NldHZhbHVldG9jaGVjawEABjxpbml0PgEAAygpVgEABmludm9rZQEACkV4Y2VwdGlvbnMHADcBAApTb3VyY2VGaWxlAQAmUHJlcGFyZVRyYW5zbWl0Q2hlY2tSZWRpc1Bvc3RCYWNrLmphdmEMAA4ADwwAEAAPDAARABIMABMADwwAIgAjAQAABwA4DAA5ADoBAAE6DAA7ADwMAD0APgEAEGphdmEvbGFuZy9TdHJpbmcBAENTdWJQcm9jZXNzL0xldmVsMi9QcmVwYXJlVHJhbnNtaXQvUHJlcGFyZVRyYW5zbWl0Q2hlY2tSZWRpc1Bvc3RCYWNrAQAQamF2YS9sYW5nL09iamVjdAEAE2phdmEvbGFuZy9FeGNlcHRpb24BABZuZXQvc2YvanNvbi9KU09OT2JqZWN0AQAKZnJvbU9iamVjdAEALChMamF2YS9sYW5nL09iamVjdDspTG5ldC9zZi9qc29uL0pTT05PYmplY3Q7AQAFc3BsaXQBACcoTGphdmEvbGFuZy9TdHJpbmc7KVtMamF2YS9sYW5nL1N0cmluZzsBAANnZXQBACYoTGphdmEvbGFuZy9TdHJpbmc7KUxqYXZhL2xhbmcvT2JqZWN0OwAhAAwADQAAAAQABAAOAA8AAAAEABAADwAAAAQAEQASAAAABAATAA8AAAAKAAEAFAAVAAEAFgAAAB0AAQABAAAABSq0AAGwAAAAAQAXAAAABgABAAAADAABABgAGQABABYAAAAiAAIAAgAAAAYqK7UAAbEAAAABABcAAAAKAAIAAAAPAAUAEAABABoAFQABABYAAAAdAAEAAQAAAAUqtAACsAAAAAEAFwAAAAYAAQAAABIAAQAbABkAAQAWAAAAIgACAAIAAAAGKiu1AAKxAAAAAQAXAAAACgACAAAAFQAFABYAAQAcAB0AAQAWAAAAHQABAAEAAAAFKrQAA6wAAAABABcAAAAGAAEAAAAYAAEAHgAfAAEAFgAAACIAAgACAAAABiobtQADsQAAAAEAFwAAAAoAAgAAABsABQAcAAEAIAAVAAEAFgAAAB0AAQABAAAABSq0AASwAAAAAQAXAAAABgABAAAAHgABACEAGQABABYAAAAiAAIAAgAAAAYqK7UABLEAAAABABcAAAAKAAIAAAAhAAUAIgABACIAIwABABYAAABIAAIAAQAAABwqtwAFKhIGtQABKhIGtQACKgO1AAMqEga1AASxAAAAAQAXAAAAGgAGAAAAJAAEAAcACgAIABAACQAVAAoAGwAlAAEAJAAjAAIAFgAAAE4ABAACAAAALiq0AAK4AAdMKiq0AAESCLYACQMytQABKisqtAABEgi2AAkDMrYACsAAC7UABLEAAAABABcAAAAOAAMAAAAwAAgAMQAXADIAJQAAAAQAAQAmAAEAJwAAAAIAKA==</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput>
+                <xsl:if test="$GetFromRedis/javaCodeActivityOutput/postback_tramsmit_parameter">
+                    <keytocheck>
+                        <xsl:value-of select="$GetFromRedis/javaCodeActivityOutput/postback_tramsmit_parameter"/>
+                    </keytocheck>
+                </xsl:if>
+                <xsl:if test="$Start/root/lastjson">
+                    <lastjson>
+                        <xsl:value-of select="$Start/root/lastjson"/>
+                    </lastjson>
+                </xsl:if>
+                <xsl:if test="$Start/root/isConversion">
+                    <isConversion>
+                        <xsl:value-of select="$Start/root/isConversion"/>
+                    </isConversion>
+                </xsl:if>
+            </javaCodeActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="GetFromRedis">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>155</pd:x>
+        <pd:y>64</pd:y>
+        <config>
+            <fileName>PrepareTransmitGetFromRedis</fileName>
+            <packageName>SubProcess.Level2.PrepareTransmit</packageName>
+            <fullsource>package SubProcess.Level2.PrepareTransmit;
+import java.util.*;
+import java.io.*;
+import redis.clients.jedis.Jedis;
+@SuppressWarnings("unchecked")
+public class PrepareTransmitGetFromRedis{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String postbackkey_camp = "";
+	protected String postbackkey_n = "";
+	protected String redis_host = "";
+	protected int redis_port = 0;
+	protected String redis_pass = "";
+	protected String eventname = "";
+	protected int isConversion = 0;
+	protected String postback_istransmit = "";
+	protected String postback_synctype = "";
+	protected String postback_tramsmit_parameter = "";
+	protected String postback_url = "";
+	public String getpostbackkey_camp() {
+		return postbackkey_camp;
+	}
+	public void setpostbackkey_camp(String val) {
+		postbackkey_camp = val;
+	}
+	public String getpostbackkey_n() {
+		return postbackkey_n;
+	}
+	public void setpostbackkey_n(String val) {
+		postbackkey_n = val;
+	}
+	public String getredis_host() {
+		return redis_host;
+	}
+	public void setredis_host(String val) {
+		redis_host = val;
+	}
+	public int getredis_port() {
+		return redis_port;
+	}
+	public void setredis_port(int val) {
+		redis_port = val;
+	}
+	public String getredis_pass() {
+		return redis_pass;
+	}
+	public void setredis_pass(String val) {
+		redis_pass = val;
+	}
+	public String geteventname() {
+		return eventname;
+	}
+	public void seteventname(String val) {
+		eventname = val;
+	}
+	public int getisConversion() {
+		return isConversion;
+	}
+	public void setisConversion(int val) {
+		isConversion = val;
+	}
+	public String getpostback_istransmit() {
+		return postback_istransmit;
+	}
+	public void setpostback_istransmit(String val) {
+		postback_istransmit = val;
+	}
+	public String getpostback_synctype() {
+		return postback_synctype;
+	}
+	public void setpostback_synctype(String val) {
+		postback_synctype = val;
+	}
+	public String getpostback_tramsmit_parameter() {
+		return postback_tramsmit_parameter;
+	}
+	public void setpostback_tramsmit_parameter(String val) {
+		postback_tramsmit_parameter = val;
+	}
+	public String getpostback_url() {
+		return postback_url;
+	}
+	public void setpostback_url(String val) {
+		postback_url = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public PrepareTransmitGetFromRedis() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String postbackkey_camp
+	In  : String postbackkey_n
+	In  : String redis_host
+	In  : int redis_port
+	In  : String redis_pass
+	In  : String eventname
+	In  : int isConversion
+	Out : String postback_istransmit
+	Out : String postback_synctype
+	Out : String postback_tramsmit_parameter
+	Out : String postback_url
+* Available Variables: DO NOT MODIFY *****/
+
+	Jedis jedis = new Jedis(redis_host, redis_port,100000);
+	jedis.auth(redis_pass);
+	Map map= new HashMap();
+if(jedis.exists(postbackkey_camp))
+map=jedis.hgetAll(postbackkey_camp);
+else if(jedis.exists(postbackkey_n))
+map=jedis.hgetAll(postbackkey_n);
+else
+map.put("postback_istransmit","0");
+if(map.containsKey("postback_istransmit")){postback_istransmit=(String)map.get("postback_istransmit");
+if(isConversion!=1)postback_istransmit="1";
+}
+//if(!(postback_istransmit.equals("0")||postback_istransmit==null||postback_istransmit.equals(""))){
+if(postback_istransmit.equals("1")){
+if(map.containsKey("postback_url")){postback_url=(String)map.get("postback_url");}
+if(map.containsKey("postback_tramsmit_parameter")){postback_tramsmit_parameter=(String)map.get("postback_tramsmit_parameter");}
+if(map.containsKey("postback_synctype")){postback_synctype=(String)map.get("postback_synctype");}
+}
+}
+}
+</fullsource>
+            <outputData>
+                <row>
+                    <fieldName>postback_istransmit</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>postback_synctype</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>postback_tramsmit_parameter</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>postback_url</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <inputData>
+                <row>
+                    <fieldName>postbackkey_camp</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>postbackkey_n</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>redis_host</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>redis_port</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>redis_pass</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>eventname</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>isConversion</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <byteCode>
+                <class>
+                    <name>PrepareTransmitGetFromRedis</name>
+                    <byteCode>yv66vgAAADMAiQkAIgBXCQAiAFgJACIAWQkAIgBaCQAiAFsJACIAXAkAIgBdCQAiAF4JACIAXwkAIgBgCQAiAGEKACMAYggAYwcAZAMAAYagCgAOAGUKAA4AZgcAZwoAEgBiCgAOAGgKAGkAagoADgBrCAAtCABsCwBtAG4LAG0AbwsAbQBwBwBxCAByCgAcAHMIADAIAC8IAC4HAHQHAHUBABBwb3N0YmFja2tleV9jYW1wAQASTGphdmEvbGFuZy9TdHJpbmc7AQANcG9zdGJhY2trZXlfbgEACnJlZGlzX2hvc3QBAApyZWRpc19wb3J0AQABSQEACnJlZGlzX3Bhc3MBAAlldmVudG5hbWUBAAxpc0NvbnZlcnNpb24BABNwb3N0YmFja19pc3RyYW5zbWl0AQARcG9zdGJhY2tfc3luY3R5cGUBABtwb3N0YmFja190cmFtc21pdF9wYXJhbWV0ZXIBAAxwb3N0YmFja191cmwBABNnZXRwb3N0YmFja2tleV9jYW1wAQAUKClMamF2YS9sYW5nL1N0cmluZzsBAARDb2RlAQAPTGluZU51bWJlclRhYmxlAQATc2V0cG9zdGJhY2trZXlfY2FtcAEAFShMamF2YS9sYW5nL1N0cmluZzspVgEAEGdldHBvc3RiYWNra2V5X24BABBzZXRwb3N0YmFja2tleV9uAQANZ2V0cmVkaXNfaG9zdAEADXNldHJlZGlzX2hvc3QBAA1nZXRyZWRpc19wb3J0AQADKClJAQANc2V0cmVkaXNfcG9ydAEABChJKVYBAA1nZXRyZWRpc19wYXNzAQANc2V0cmVkaXNfcGFzcwEADGdldGV2ZW50bmFtZQEADHNldGV2ZW50bmFtZQEAD2dldGlzQ29udmVyc2lvbgEAD3NldGlzQ29udmVyc2lvbgEAFmdldHBvc3RiYWNrX2lzdHJhbnNtaXQBABZzZXRwb3N0YmFja19pc3RyYW5zbWl0AQAUZ2V0cG9zdGJhY2tfc3luY3R5cGUBABRzZXRwb3N0YmFja19zeW5jdHlwZQEAHmdldHBvc3RiYWNrX3RyYW1zbWl0X3BhcmFtZXRlcgEAHnNldHBvc3RiYWNrX3RyYW1zbWl0X3BhcmFtZXRlcgEAD2dldHBvc3RiYWNrX3VybAEAD3NldHBvc3RiYWNrX3VybAEABjxpbml0PgEAAygpVgEABmludm9rZQEADVN0YWNrTWFwVGFibGUHAGQHAHYBAApFeGNlcHRpb25zBwB3AQAKU291cmNlRmlsZQEAIFByZXBhcmVUcmFuc21pdEdldEZyb21SZWRpcy5qYXZhDAAkACUMACYAJQwAJwAlDAAoACkMACoAJQwAKwAlDAAsACkMAC0AJQwALgAlDAAvACUMADAAJQwATQBOAQAAAQAZcmVkaXMvY2xpZW50cy9qZWRpcy9KZWRpcwwATQB4DAB5AHoBABFqYXZhL3V0aWwvSGFzaE1hcAwAewB8BwB9DAB+AH8MAIAAgQEAATAHAHYMAIIAgwwAhACFDACGAIcBABBqYXZhL2xhbmcvU3RyaW5nAQABMQwAiACFAQA9U3ViUHJvY2Vzcy9MZXZlbDIvUHJlcGFyZVRyYW5zbWl0L1ByZXBhcmVUcmFuc21pdEdldEZyb21SZWRpcwEAEGphdmEvbGFuZy9PYmplY3QBAA1qYXZhL3V0aWwvTWFwAQATamF2YS9sYW5nL0V4Y2VwdGlvbgEAFyhMamF2YS9sYW5nL1N0cmluZztJSSlWAQAEYXV0aAEAJihMamF2YS9sYW5nL1N0cmluZzspTGphdmEvbGFuZy9TdHJpbmc7AQAGZXhpc3RzAQAnKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL0Jvb2xlYW47AQARamF2YS9sYW5nL0Jvb2xlYW4BAAxib29sZWFuVmFsdWUBAAMoKVoBAAdoZ2V0QWxsAQAjKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS91dGlsL01hcDsBAANwdXQBADgoTGphdmEvbGFuZy9PYmplY3Q7TGphdmEvbGFuZy9PYmplY3Q7KUxqYXZhL2xhbmcvT2JqZWN0OwEAC2NvbnRhaW5zS2V5AQAVKExqYXZhL2xhbmcvT2JqZWN0OylaAQADZ2V0AQAmKExqYXZhL2xhbmcvT2JqZWN0OylMamF2YS9sYW5nL09iamVjdDsBAAZlcXVhbHMAIQAiACMAAAALAAQAJAAlAAAABAAmACUAAAAEACcAJQAAAAQAKAApAAAABAAqACUAAAAEACsAJQAAAAQALAApAAAABAAtACUAAAAEAC4AJQAAAAQALwAlAAAABAAwACUAAAAYAAEAMQAyAAEAMwAAAB0AAQABAAAABSq0AAGwAAAAAQA0AAAABgABAAAAFAABADUANgABADMAAAAiAAIAAgAAAAYqK7UAAbEAAAABADQAAAAKAAIAAAAXAAUAGAABADcAMgABADMAAAAdAAEAAQAAAAUqtAACsAAAAAEANAAAAAYAAQAAABoAAQA4ADYAAQAzAAAAIgACAAIAAAAGKiu1AAKxAAAAAQA0AAAACgACAAAAHQAFAB4AAQA5ADIAAQAzAAAAHQABAAEAAAAFKrQAA7AAAAABADQAAAAGAAEAAAAgAAEAOgA2AAEAMwAAACIAAgACAAAABiortQADsQAAAAEANAAAAAoAAgAAACMABQAkAAEAOwA8AAEAMwAAAB0AAQABAAAABSq0AASsAAAAAQA0AAAABgABAAAAJgABAD0APgABADMAAAAiAAIAAgAAAAYqG7UABLEAAAABADQAAAAKAAIAAAApAAUAKgABAD8AMgABADMAAAAdAAEAAQAAAAUqtAAFsAAAAAEANAAAAAYAAQAAACwAAQBAADYAAQAzAAAAIgACAAIAAAAGKiu1AAWxAAAAAQA0AAAACgACAAAALwAFADAAAQBBADIAAQAzAAAAHQABAAEAAAAFKrQABrAAAAABADQAAAAGAAEAAAAyAAEAQgA2AAEAMwAAACIAAgACAAAABiortQAGsQAAAAEANAAAAAoAAgAAADUABQA2AAEAQwA8AAEAMwAAAB0AAQABAAAABSq0AAesAAAAAQA0AAAABgABAAAAOAABAEQAPgABADMAAAAiAAIAAgAAAAYqG7UAB7EAAAABADQAAAAKAAIAAAA7AAUAPAABAEUAMgABADMAAAAdAAEAAQAAAAUqtAAIsAAAAAEANAAAAAYAAQAAAD4AAQBGADYAAQAzAAAAIgACAAIAAAAGKiu1AAixAAAAAQA0AAAACgACAAAAQQAFAEIAAQBHADIAAQAzAAAAHQABAAEAAAAFKrQACbAAAAABADQAAAAGAAEAAABEAAEASAA2AAEAMwAAACIAAgACAAAABiortQAJsQAAAAEANAAAAAoAAgAAAEcABQBIAAEASQAyAAEAMwAAAB0AAQABAAAABSq0AAqwAAAAAQA0AAAABgABAAAASgABAEoANgABADMAAAAiAAIAAgAAAAYqK7UACrEAAAABADQAAAAKAAIAAABNAAUATgABAEsAMgABADMAAAAdAAEAAQAAAAUqtAALsAAAAAEANAAAAAYAAQAAAFAAAQBMADYAAQAzAAAAIgACAAIAAAAGKiu1AAuxAAAAAQA0AAAACgACAAAAUwAFAFQAAQBNAE4AAQAzAAAAjQACAAEAAABFKrcADCoSDbUAASoSDbUAAioSDbUAAyoDtQAEKhINtQAFKhINtQAGKgO1AAcqEg21AAgqEg21AAkqEg21AAoqEg21AAuxAAAAAQA0AAAANgANAAAAVgAEAAgACgAJABAACgAWAAsAGwAMACEADQAnAA4ALAAPADIAEAA4ABEAPgASAEQAVwABAE8ATgACADMAAAFMAAUAAwAAAOW7AA5ZKrQAAyq0AAQSD7cAEEwrKrQABbYAEVe7ABJZtwATTSsqtAABtgAUtgAVmQAPKyq0AAG2ABZNpwAoKyq0AAK2ABS2ABWZAA8rKrQAArYAFk2nAA4sEhcSGLkAGQMAVywSF7kAGgIAmQAgKiwSF7kAGwIAwAActQAIKrQABwSfAAkqEh21AAgqtAAIEh22AB6ZAFEsEh+5ABoCAJkAEiosEh+5ABsCAMAAHLUACywSILkAGgIAmQASKiwSILkAGwIAwAActQAKLBIhuQAaAgCZABIqLBIhuQAbAgDAABy1AAmxAAAAAgA0AAAAPgAPAAAAZwASAGgAGwBpACMAagAxAGsAPQBsAEsAbQBXAG8AYgBwAHwAcQCKAHQAlgB1ALAAdgDKAHcA5AB5AFAAAAARAAf9AD0HAFEHAFIZCiclGRkAUwAAAAQAAQBUAAEAVQAAAAIAVg==</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput>
+                <xsl:choose>
+                    <xsl:when test="$Start/root/isConversion=1">
+                        <postbackkey_camp>
+                            <xsl:value-of select="concat(&#xA;&quot;postback-&quot;,&#xA;&quot;local-&quot;,&#xA;$Start/root/campaign_id,&#xA;&quot;-&quot;,&#xA;&quot;conversion&quot;&#xA;)"/>
+                        </postbackkey_camp>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <postbackkey_camp>
+                            <xsl:value-of select="concat(&#xA;&quot;postback-&quot;,&#xA;&quot;local-&quot;,&#xA;$Start/root/campaign_id,&#xA;&quot;-&quot;,&#xA;$Start/root/event_name&#xA;)"/>
+                        </postbackkey_camp>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <xsl:choose>
+                    <xsl:when test="$Start/root/isConversion=1">
+                        <postbackkey_n>
+                            <xsl:value-of select="concat(&#xA;&quot;postback-&quot;,&#xA;&quot;global-&quot;,&#xA;$Start/root/n_id,&#xA;&quot;-&quot;,&#xA;&quot;conversion&quot;&#xA;)"/>
+                        </postbackkey_n>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <postbackkey_n>
+                            <xsl:value-of select="concat(&#xA;&quot;postback-&quot;,&#xA;&quot;global-&quot;,&#xA;$Start/root/n_id,&#xA;&quot;-&quot;,&#xA;$Start/root/event_name&#xA;)"/>
+                        </postbackkey_n>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <redis_host>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/Redis/host"/>
+                </redis_host>
+                <redis_port>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/Redis/port"/>
+                </redis_port>
+                <redis_pass>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/Redis/pass"/>
+                </redis_pass>
+                <eventname>
+                    <xsl:value-of select="$Start/root/event_name"/>
+                </eventname>
+                <xsl:if test="$Start/root/isConversion">
+                    <isConversion>
+                        <xsl:value-of select="$Start/root/isConversion"/>
+                    </isConversion>
+                </xsl:if>
+            </javaCodeActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>Rethrow</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>GetFromRedis</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>CheckRedisPostBack</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GetFromRedis</pd:from>
+        <pd:to>CheckRedisPostBack</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>$GetFromRedis/javaCodeActivityOutput/postback_istransmit="1"</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GetFromRedis</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

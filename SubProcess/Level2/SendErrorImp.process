@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns1="http://www.tibco.com/pe/DeployedVarsType" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/mail" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx="http://xmlns.tibco.com/body">
+    <pd:name>SubProcess/Level2/SendErrorImp.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="subjectandcontent" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="subject" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>191</pd:startX>
+    <pd:startY>101</pd:startY>
+    <pd:returnBindings/>
+    <pd:endName>End</pd:endName>
+    <pd:endX>584</pd:endX>
+    <pd:endY>102</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1477990647502</pd:targetNamespace>
+    <pd:activity name="SendToErrorQueue">
+        <pd:type>com.tibco.plugin.jms.JMSQueueSendActivity</pd:type>
+        <pd:resourceType>ae.activities.JMSQueueSendActivity</pd:resourceType>
+        <pd:x>383</pd:x>
+        <pd:y>98</pd:y>
+        <config>
+            <PermittedMessageType>XML Text</PermittedMessageType>
+            <SessionAttributes>
+                <transacted>false</transacted>
+                <acknowledgeMode>1</acknowledgeMode>
+                <maxSessions>1</maxSessions>
+                <destination>cep_error_imp</destination>
+            </SessionAttributes>
+            <ConfigurableHeaders>
+                <JMSDeliveryMode>PERSISTENT</JMSDeliveryMode>
+                <JMSExpiration>0</JMSExpiration>
+                <JMSPriority>4</JMSPriority>
+            </ConfigurableHeaders>
+            <ConnectionReference>/SubProcess/Level2/JMS Connection.sharedjmscon</ConnectionReference>
+            <InDataxsdString>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="from" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="to" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="subject" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="body" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </InDataxsdString>
+        </config>
+        <pd:inputBindings>
+            <ns2:ActivityInput>
+                <Body>
+                    <root>
+                        <from>
+                            <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/ProjectGVs/mailfrom"/>
+                        </from>
+                        <to>
+                            <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/ProjectGVs/mailto"/>
+                        </to>
+                        <subject>
+                            <xsl:value-of select="concat(&#xA;$_globalVariables/ns1:GlobalVariables/ServerGVs/domain,&#xA;&quot; &quot;,&#xA;$_globalVariables/ns1:GlobalVariables/ProjectGVs/projectName,&#xA;&quot; Error : &quot;,$Start/root/subject)"/>
+                        </subject>
+                        <xsl:if test="$Start/root/subjectandcontent">
+                            <body>
+                                <xsl:value-of select="$Start/root/subjectandcontent"/>
+                            </body>
+                        </xsl:if>
+                    </root>
+                </Body>
+            </ns2:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>SendToErrorQueue</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SendToErrorQueue</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

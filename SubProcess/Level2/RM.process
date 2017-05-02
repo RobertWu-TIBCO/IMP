@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions">
+    <pd:name>SubProcess/Level2/RM.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startDescription>if exists random number , then no need to generate it again</pd:startDescription>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="randomnum" type="xsd:int" minOccurs="0"/>
+                    <xsd:element name="dbrm" type="xsd:int" minOccurs="0"/>
+                    <xsd:element name="max" type="xsd:int" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>150</pd:startX>
+    <pd:startY>64</pd:startY>
+    <pd:returnBindings>
+        <root>
+            <xsl:choose>
+                <xsl:when test="$ClickidSplit/javaCodeActivityOutput/randomresult&#xA;>&#xA;$Start/root/dbrm">
+                    <isRm>
+                        <xsl:value-of select="0"/>
+                    </isRm>
+                </xsl:when>
+                <xsl:otherwise>
+                    <isRm>
+                        <xsl:value-of select="1"/>
+                    </isRm>
+                </xsl:otherwise>
+            </xsl:choose>
+        </root>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="isRm" type="xsd:int" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>425</pd:endX>
+    <pd:endY>68</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1488791741547</pd:targetNamespace>
+    <pd:activity name="ClickidSplit">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>283</pd:x>
+        <pd:y>64</pd:y>
+        <config>
+            <fileName>RMClickidSplit</fileName>
+            <packageName>SubProcess.Level2.RM</packageName>
+            <fullsource>package SubProcess.Level2.RM;
+import java.util.*;
+import java.io.*;
+public class RMClickidSplit{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected int max = 0;
+	protected int randomresult = 0;
+	public int getmax() {
+		return max;
+	}
+	public void setmax(int val) {
+		max = val;
+	}
+	public int getrandomresult() {
+		return randomresult;
+	}
+	public void setrandomresult(int val) {
+		randomresult = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public RMClickidSplit() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : int max
+	Out : int randomresult
+* Available Variables: DO NOT MODIFY *****/
+
+Random rand =new Random();
+
+randomresult=rand.nextInt(max);}
+}
+</fullsource>
+            <outputData>
+                <row>
+                    <fieldName>randomresult</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <inputData>
+                <row>
+                    <fieldName>max</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <byteCode>
+                <class>
+                    <name>RMClickidSplit</name>
+                    <byteCode>yv66vgAAADMAJQkABwAbCQAHABwKAAgAHQcAHgoABAAdCgAEAB8HACAHACEBAANtYXgBAAFJAQAMcmFuZG9tcmVzdWx0AQAGZ2V0bWF4AQADKClJAQAEQ29kZQEAD0xpbmVOdW1iZXJUYWJsZQEABnNldG1heAEABChJKVYBAA9nZXRyYW5kb21yZXN1bHQBAA9zZXRyYW5kb21yZXN1bHQBAAY8aW5pdD4BAAMoKVYBAAZpbnZva2UBAApFeGNlcHRpb25zBwAiAQAKU291cmNlRmlsZQEAE1JNQ2xpY2tpZFNwbGl0LmphdmEMAAkACgwACwAKDAAUABUBABBqYXZhL3V0aWwvUmFuZG9tDAAjACQBACNTdWJQcm9jZXNzL0xldmVsMi9STS9STUNsaWNraWRTcGxpdAEAEGphdmEvbGFuZy9PYmplY3QBABNqYXZhL2xhbmcvRXhjZXB0aW9uAQAHbmV4dEludAEABChJKUkAIQAHAAgAAAACAAQACQAKAAAABAALAAoAAAAGAAEADAANAAEADgAAAB0AAQABAAAABSq0AAGsAAAAAQAPAAAABgABAAAACQABABAAEQABAA4AAAAiAAIAAgAAAAYqG7UAAbEAAAABAA8AAAAKAAIAAAAMAAUADQABABIADQABAA4AAAAdAAEAAQAAAAUqtAACrAAAAAEADwAAAAYAAQAAAA8AAQATABEAAQAOAAAAIgACAAIAAAAGKhu1AAKxAAAAAQAPAAAACgACAAAAEgAFABMAAQAUABUAAQAOAAAAMwACAAEAAAAPKrcAAyoDtQABKgO1AAKxAAAAAQAPAAAAEgAEAAAAFQAEAAYACQAHAA4AFgABABYAFQACAA4AAAAxAAMAAgAAABW7AARZtwAFTCorKrQAAbYABrUAArEAAAABAA8AAAAKAAIAAAAdAAgAHwAXAAAABAABABgAAQAZAAAAAgAa</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput>
+                <xsl:if test="$Start/root/max">
+                    <max>
+                        <xsl:value-of select="$Start/root/max"/>
+                    </max>
+                </xsl:if>
+            </javaCodeActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>ClickidSplit</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>ClickidSplit</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

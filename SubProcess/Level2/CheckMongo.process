@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <pd:name>SubProcess/Level2/CheckMongo.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="mongohost" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="mongoport" type="xsd:int" minOccurs="0"/>
+                    <xsd:element name="dbname" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="collectionname" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="operation" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="keytocheck" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="valuetocheck" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="isConversion" type="xsd:int" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>150</pd:startX>
+    <pd:startY>64</pd:startY>
+    <pd:returnBindings>
+        <root>
+            <xsl:if test="$CheckMongo/javaCodeActivityOutput/isDup">
+                <isDup>
+                    <xsl:value-of select="$CheckMongo/javaCodeActivityOutput/isDup"/>
+                </isDup>
+            </xsl:if>
+            <xsl:if test="$CheckMongo/javaCodeActivityOutput/matchedresult">
+                <matchResult>
+                    <xsl:value-of select="$CheckMongo/javaCodeActivityOutput/matchedresult"/>
+                </matchResult>
+            </xsl:if>
+            <xsl:if test="$CheckMongo/javaCodeActivityOutput/transimit_event_inlogtype">
+                <transimit_event_inlogtype>
+                    <xsl:value-of select="$CheckMongo/javaCodeActivityOutput/transimit_event_inlogtype"/>
+                </transimit_event_inlogtype>
+            </xsl:if>
+        </root>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="isDup" type="xsd:int" minOccurs="0"/>
+                    <xsd:element name="matchResult" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="transimit_event_inlogtype" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>450</pd:endX>
+    <pd:endY>64</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1488512401853</pd:targetNamespace>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>102</pd:x>
+        <pd:y>149</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Rethrow">
+        <pd:type>com.tibco.pe.core.RethrowActivity</pd:type>
+        <pd:resourceType>ae.activities.rethrow</pd:resourceType>
+        <pd:x>317</pd:x>
+        <pd:y>148</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="CheckMongo">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>290</pd:x>
+        <pd:y>64</pd:y>
+        <config>
+            <fileName>CheckMongoCheckMongo</fileName>
+            <packageName>SubProcess.Level2.CheckMongo</packageName>
+            <fullsource>package SubProcess.Level2.CheckMongo;
+import java.util.*;
+import java.io.*;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoException;
+import com.mongodb.WriteConcern;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.DBCursor;
+import com.mongodb.ServerAddress;
+import java.util.Arrays;
+
+public class CheckMongoCheckMongo{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String mongohost = "";
+	protected int mongoport = 0;
+	protected String dbname = "";
+	protected String collectionname = "";
+	protected String operation = "";
+	protected String keytocheck = "";
+	protected String valuetocheck = "";
+	protected int isConversion = 0;
+	protected int isDup = 0;
+	protected String matchedresult = "";
+	protected String transimit_event_inlogtype = "";
+	public String getmongohost() {
+		return mongohost;
+	}
+	public void setmongohost(String val) {
+		mongohost = val;
+	}
+	public int getmongoport() {
+		return mongoport;
+	}
+	public void setmongoport(int val) {
+		mongoport = val;
+	}
+	public String getdbname() {
+		return dbname;
+	}
+	public void setdbname(String val) {
+		dbname = val;
+	}
+	public String getcollectionname() {
+		return collectionname;
+	}
+	public void setcollectionname(String val) {
+		collectionname = val;
+	}
+	public String getoperation() {
+		return operation;
+	}
+	public void setoperation(String val) {
+		operation = val;
+	}
+	public String getkeytocheck() {
+		return keytocheck;
+	}
+	public void setkeytocheck(String val) {
+		keytocheck = val;
+	}
+	public String getvaluetocheck() {
+		return valuetocheck;
+	}
+	public void setvaluetocheck(String val) {
+		valuetocheck = val;
+	}
+	public int getisConversion() {
+		return isConversion;
+	}
+	public void setisConversion(int val) {
+		isConversion = val;
+	}
+	public int getisDup() {
+		return isDup;
+	}
+	public void setisDup(int val) {
+		isDup = val;
+	}
+	public String getmatchedresult() {
+		return matchedresult;
+	}
+	public void setmatchedresult(String val) {
+		matchedresult = val;
+	}
+	public String gettransimit_event_inlogtype() {
+		return transimit_event_inlogtype;
+	}
+	public void settransimit_event_inlogtype(String val) {
+		transimit_event_inlogtype = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public CheckMongoCheckMongo() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String mongohost
+	In  : int mongoport
+	In  : String dbname
+	In  : String collectionname
+	In  : String operation
+	In  : String keytocheck
+	In  : String valuetocheck
+	In  : int isConversion
+	Out : int isDup
+	Out : String matchedresult
+	Out : String transimit_event_inlogtype
+* Available Variables: DO NOT MODIFY *****/
+
+MongoClient mongoClient =null;
+	      try{   
+	         // To connect to mongodb server
+	          mongoClient = new MongoClient(mongohost,mongoport );
+	         // Now connect to your databases
+	         @SuppressWarnings("deprecation")
+	         DB db = mongoClient.getDB(dbname);
+	         DBCollection getCollection=db.getCollection(collectionname);
+		BasicDBObject query = new BasicDBObject(keytocheck, valuetocheck);  
+		BasicDBObject noid = new BasicDBObject("_id",0);  
+		//BasicDBObject query = new BasicDBObject();  
+//		BasicDBObject query = new BasicDBObject("campaign_rm", 66);  
+// if valurtocheck is a string and mongodb expects a number, there would be no match found
+//		query.put(keytocheck, new BasicDBObject(keytocheck, valuetocheck));  
+//		DBCursor find=getCollection.find(query);
+		DBObject obj=getCollection.findOne(query,noid);
+                query=(BasicDBObject)obj;
+		if(query!=null)isDup=1;
+   		if(operation.equals("transparent"))
+		{
+		if(isDup!=1)matchedresult="{}";
+		else {
+		matchedresult=query.toString();
+		if(isConversion!=1)
+		{
+		transimit_event_inlogtype=query.getString("type");
+		transimit_event_inlogtype=(transimit_event_inlogtype.equals("normal")?"normal":"rm");
+		}
+		}
+            	System.out.println(" found value :" + matchedresult);  
+		}
+	      }catch(Exception e){
+	         System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+	      }finally{
+            if(mongoClient!=null){
+                mongoClient.close();
+           			 }
+		}
+	//if(mongoClient!=null)mongoClient.close();   
+}
+}
+</fullsource>
+            <inputData>
+                <row>
+                    <fieldName>mongohost</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>mongoport</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>dbname</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>collectionname</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>operation</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>keytocheck</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>valuetocheck</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>isConversion</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <outputData>
+                <row>
+                    <fieldName>isDup</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>matchedresult</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>transimit_event_inlogtype</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <byteCode>
+                <class>
+                    <name>CheckMongoCheckMongo</name>
+                    <byteCode>yv66vgAAADMAvgkALQBoCQAtAGkJAC0AagkALQBrCQAtAGwJAC0AbQkALQBuCQAtAG8JAC0AcAkALQBxCQAtAHIKAC4AcwgAdAcAdQoADgB2CgAOAHcKAHgAeQcAegoAEgB7CAB8CgB9AH4KAH8AgAgAgQoAggCDCACECgASAIUIAIYKABIAhwgAiAgAiQkAigCLBwCMCgAgAHMIAI0KACAAjgoAIACFCgCPAJAKAA4AkQcAkgkAigCTCgAuAJQKAJUAlggAlwoAJwCYBwCZBwCaAQAJbW9uZ29ob3N0AQASTGphdmEvbGFuZy9TdHJpbmc7AQAJbW9uZ29wb3J0AQABSQEABmRibmFtZQEADmNvbGxlY3Rpb25uYW1lAQAJb3BlcmF0aW9uAQAKa2V5dG9jaGVjawEADHZhbHVldG9jaGVjawEADGlzQ29udmVyc2lvbgEABWlzRHVwAQANbWF0Y2hlZHJlc3VsdAEAGXRyYW5zaW1pdF9ldmVudF9pbmxvZ3R5cGUBAAxnZXRtb25nb2hvc3QBABQoKUxqYXZhL2xhbmcvU3RyaW5nOwEABENvZGUBAA9MaW5lTnVtYmVyVGFibGUBAAxzZXRtb25nb2hvc3QBABUoTGphdmEvbGFuZy9TdHJpbmc7KVYBAAxnZXRtb25nb3BvcnQBAAMoKUkBAAxzZXRtb25nb3BvcnQBAAQoSSlWAQAJZ2V0ZGJuYW1lAQAJc2V0ZGJuYW1lAQARZ2V0Y29sbGVjdGlvbm5hbWUBABFzZXRjb2xsZWN0aW9ubmFtZQEADGdldG9wZXJhdGlvbgEADHNldG9wZXJhdGlvbgEADWdldGtleXRvY2hlY2sBAA1zZXRrZXl0b2NoZWNrAQAPZ2V0dmFsdWV0b2NoZWNrAQAPc2V0dmFsdWV0b2NoZWNrAQAPZ2V0aXNDb252ZXJzaW9uAQAPc2V0aXNDb252ZXJzaW9uAQAIZ2V0aXNEdXABAAhzZXRpc0R1cAEAEGdldG1hdGNoZWRyZXN1bHQBABBzZXRtYXRjaGVkcmVzdWx0AQAcZ2V0dHJhbnNpbWl0X2V2ZW50X2lubG9ndHlwZQEAHHNldHRyYW5zaW1pdF9ldmVudF9pbmxvZ3R5cGUBAAY8aW5pdD4BAAMoKVYBAAZpbnZva2UBAA1TdGFja01hcFRhYmxlBwCZBwB1BwCbBwCcBwB6BwCdBwCeBwCSBwCfAQAKRXhjZXB0aW9ucwEAClNvdXJjZUZpbGUBABlDaGVja01vbmdvQ2hlY2tNb25nby5qYXZhDAAvADAMADEAMgwAMwAwDAA0ADAMADUAMAwANgAwDAA3ADAMADgAMgwAOQAyDAA6ADAMADsAMAwAWABZAQAAAQAXY29tL21vbmdvZGIvTW9uZ29DbGllbnQMAFgAoAwAoQCiBwCbDACjAKQBABljb20vbW9uZ29kYi9CYXNpY0RCT2JqZWN0DABYAKUBAANfaWQHAKYMAKcAqAcAnAwAqQCqAQALdHJhbnNwYXJlbnQHAJ4MAKsArAEAAnt9DACtAD0BAAR0eXBlDACuAK8BAAZub3JtYWwBAAJybQcAsAwAsQCyAQAXamF2YS9sYW5nL1N0cmluZ0J1aWxkZXIBAA4gZm91bmQgdmFsdWUgOgwAswC0BwC1DAC2AEEMALcAWQEAE2phdmEvbGFuZy9FeGNlcHRpb24MALgAsgwAuQC6BwC7DAC8AD0BAAI6IAwAvQA9AQAxU3ViUHJvY2Vzcy9MZXZlbDIvQ2hlY2tNb25nby9DaGVja01vbmdvQ2hlY2tNb25nbwEAEGphdmEvbGFuZy9PYmplY3QBAA5jb20vbW9uZ29kYi9EQgEAGGNvbS9tb25nb2RiL0RCQ29sbGVjdGlvbgEAFGNvbS9tb25nb2RiL0RCT2JqZWN0AQAQamF2YS9sYW5nL1N0cmluZwEAE2phdmEvbGFuZy9UaHJvd2FibGUBABYoTGphdmEvbGFuZy9TdHJpbmc7SSlWAQAFZ2V0REIBACQoTGphdmEvbGFuZy9TdHJpbmc7KUxjb20vbW9uZ29kYi9EQjsBAA1nZXRDb2xsZWN0aW9uAQAuKExqYXZhL2xhbmcvU3RyaW5nOylMY29tL21vbmdvZGIvREJDb2xsZWN0aW9uOwEAJyhMamF2YS9sYW5nL1N0cmluZztMamF2YS9sYW5nL09iamVjdDspVgEAEWphdmEvbGFuZy9JbnRlZ2VyAQAHdmFsdWVPZgEAFihJKUxqYXZhL2xhbmcvSW50ZWdlcjsBAAdmaW5kT25lAQBEKExjb20vbW9uZ29kYi9EQk9iamVjdDtMY29tL21vbmdvZGIvREJPYmplY3Q7KUxjb20vbW9uZ29kYi9EQk9iamVjdDsBAAZlcXVhbHMBABUoTGphdmEvbGFuZy9PYmplY3Q7KVoBAAh0b1N0cmluZwEACWdldFN0cmluZwEAJihMamF2YS9sYW5nL1N0cmluZzspTGphdmEvbGFuZy9TdHJpbmc7AQAQamF2YS9sYW5nL1N5c3RlbQEAA291dAEAFUxqYXZhL2lvL1ByaW50U3RyZWFtOwEABmFwcGVuZAEALShMamF2YS9sYW5nL1N0cmluZzspTGphdmEvbGFuZy9TdHJpbmdCdWlsZGVyOwEAE2phdmEvaW8vUHJpbnRTdHJlYW0BAAdwcmludGxuAQAFY2xvc2UBAANlcnIBAAhnZXRDbGFzcwEAEygpTGphdmEvbGFuZy9DbGFzczsBAA9qYXZhL2xhbmcvQ2xhc3MBAAdnZXROYW1lAQAKZ2V0TWVzc2FnZQAhAC0ALgAAAAsABAAvADAAAAAEADEAMgAAAAQAMwAwAAAABAA0ADAAAAAEADUAMAAAAAQANgAwAAAABAA3ADAAAAAEADgAMgAAAAQAOQAyAAAABAA6ADAAAAAEADsAMAAAABgAAQA8AD0AAQA+AAAAHQABAAEAAAAFKrQAAbAAAAABAD8AAAAGAAEAAAAdAAEAQABBAAEAPgAAACIAAgACAAAABiortQABsQAAAAEAPwAAAAoAAgAAACAABQAhAAEAQgBDAAEAPgAAAB0AAQABAAAABSq0AAKsAAAAAQA/AAAABgABAAAAIwABAEQARQABAD4AAAAiAAIAAgAAAAYqG7UAArEAAAABAD8AAAAKAAIAAAAmAAUAJwABAEYAPQABAD4AAAAdAAEAAQAAAAUqtAADsAAAAAEAPwAAAAYAAQAAACkAAQBHAEEAAQA+AAAAIgACAAIAAAAGKiu1AAOxAAAAAQA/AAAACgACAAAALAAFAC0AAQBIAD0AAQA+AAAAHQABAAEAAAAFKrQABLAAAAABAD8AAAAGAAEAAAAvAAEASQBBAAEAPgAAACIAAgACAAAABiortQAEsQAAAAEAPwAAAAoAAgAAADIABQAzAAEASgA9AAEAPgAAAB0AAQABAAAABSq0AAWwAAAAAQA/AAAABgABAAAANQABAEsAQQABAD4AAAAiAAIAAgAAAAYqK7UABbEAAAABAD8AAAAKAAIAAAA4AAUAOQABAEwAPQABAD4AAAAdAAEAAQAAAAUqtAAGsAAAAAEAPwAAAAYAAQAAADsAAQBNAEEAAQA+AAAAIgACAAIAAAAGKiu1AAaxAAAAAQA/AAAACgACAAAAPgAFAD8AAQBOAD0AAQA+AAAAHQABAAEAAAAFKrQAB7AAAAABAD8AAAAGAAEAAABBAAEATwBBAAEAPgAAACIAAgACAAAABiortQAHsQAAAAEAPwAAAAoAAgAAAEQABQBFAAEAUABDAAEAPgAAAB0AAQABAAAABSq0AAisAAAAAQA/AAAABgABAAAARwABAFEARQABAD4AAAAiAAIAAgAAAAYqG7UACLEAAAABAD8AAAAKAAIAAABKAAUASwABAFIAQwABAD4AAAAdAAEAAQAAAAUqtAAJrAAAAAEAPwAAAAYAAQAAAE0AAQBTAEUAAQA+AAAAIgACAAIAAAAGKhu1AAmxAAAAAQA/AAAACgACAAAAUAAFAFEAAQBUAD0AAQA+AAAAHQABAAEAAAAFKrQACrAAAAABAD8AAAAGAAEAAABTAAEAVQBBAAEAPgAAACIAAgACAAAABiortQAKsQAAAAEAPwAAAAoAAgAAAFYABQBXAAEAVgA9AAEAPgAAAB0AAQABAAAABSq0AAuwAAAAAQA/AAAABgABAAAAWQABAFcAQQABAD4AAAAiAAIAAgAAAAYqK7UAC7EAAAABAD8AAAAKAAIAAABcAAUAXQABAFgAWQABAD4AAACMAAIAAQAAAEQqtwAMKhINtQABKgO1AAIqEg21AAMqEg21AAQqEg21AAUqEg21AAYqEg21AAcqA7UACCoDtQAJKhINtQAKKhINtQALsQAAAAEAPwAAADYADQAAAF8ABAARAAoAEgAPABMAFQAUABsAFQAhABYAJwAXAC0AGAAyABkANwAaAD0AGwBDAGAAAQBaAFkAAgA+AAACMQAEAAgAAAEWAUy7AA5ZKrQAASq0AAK3AA9MKyq0AAO2ABBNLCq0AAS2ABFOuwASWSq0AAYqtAAHtwATOgS7ABJZEhQDuAAVtwATOgUtGQQZBbYAFjoGGQbAABI6BBkExgAIKgS1AAkqtAAFEhe2ABiZAGMqtAAJBJ8ADCoSGbUACqcANioZBLYAGrUACiq0AAgEnwAlKhkEEhu2ABy1AAsqKrQACxIdtgAYmQAIEh2nAAUSHrUAC7IAH7sAIFm3ACESIrYAIyq0AAq2ACO2ACS2ACUrxgBJK7YAJqcAQk2yACi7ACBZtwAhLLYAKbYAKrYAIxIrtgAjLLYALLYAI7YAJLYAJSvGABcrtgAmpwAQOgcrxgAHK7YAJhkHv7EABAACAMsA1gAnAAIAywEIAAAA1gD9AQgAAAEIAQoBCAAAAAIAPwAAAGYAGQAAAHAAAgBzABIAdgAbAHcAJAB4ADUAeQBEAH8ATgCAAFUAgQBfAIIAawCEAHwAhgCFAIcAjQCJAJgAigCvAI0AywCSAM8AkwDWAI8A1wCQAP0AkgEBAJMBCACSAQ4AkwEVAJcAWwAAAH0ACv8AXwAHBwBcBwBdBwBeBwBfBwBgBwBgBwBhAAAcbQcAXP8AAQAHBwBcBwBdBwBeBwBfBwBgBwBgBwBhAAIHAFwHAGIC/wAbAAIHAFwHAF0AAEoHAGNxBwBk/wAJAAgHAFwHAF0AAAAAAAcAZAAA/wACAAIHAFwHAF0AAABlAAAABAABACcAAQBmAAAAAgBn</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput>
+                <xsl:copy-of select="$Start/root/ancestor-or-self::*/namespace::node()"/>
+                <xsl:copy-of select="$Start/root/@*"/>
+                <xsl:copy-of select="$Start/root/node()"/>
+            </javaCodeActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>Rethrow</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>CheckMongo</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>CheckMongo</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

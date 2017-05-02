@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <pd:name>SubProcess/Level3/Gen_os_os_v.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="urlua" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>150</pd:startX>
+    <pd:startY>64</pd:startY>
+    <pd:returnBindings>
+        <root>
+            <xsl:if test="$GenOS_OSV/javaCodeActivityOutput/os">
+                <device>
+                    <xsl:value-of select="$GenOS_OSV/javaCodeActivityOutput/os"/>
+                </device>
+            </xsl:if>
+            <xsl:if test="$GenOS_OSV/javaCodeActivityOutput/os_v">
+                <os_v>
+                    <xsl:value-of select="$GenOS_OSV/javaCodeActivityOutput/os_v"/>
+                </os_v>
+            </xsl:if>
+        </root>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="device" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="os_v" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>450</pd:endX>
+    <pd:endY>64</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1488512401853</pd:targetNamespace>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>102</pd:x>
+        <pd:y>149</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Rethrow">
+        <pd:type>com.tibco.pe.core.RethrowActivity</pd:type>
+        <pd:resourceType>ae.activities.rethrow</pd:resourceType>
+        <pd:x>317</pd:x>
+        <pd:y>148</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="GenOS_OSV">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>290</pd:x>
+        <pd:y>64</pd:y>
+        <config>
+            <fileName>Gen_os_os_vGenOS_OSV</fileName>
+            <packageName>SubProcess.Level3.Gen_os_os_v</packageName>
+            <fullsource>package SubProcess.Level3.Gen_os_os_v;
+import java.util.*;
+import java.io.*;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+public class Gen_os_os_vGenOS_OSV{
+
+enum osenum{
+iphone,ipad,android,linux
+}
+
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String urlua = "";
+	protected String os = "";
+	protected String os_v = "";
+	public String geturlua() {
+		return urlua;
+	}
+	public void seturlua(String val) {
+		urlua = val;
+	}
+	public String getos() {
+		return os;
+	}
+	public void setos(String val) {
+		os = val;
+	}
+	public String getos_v() {
+		return os_v;
+	}
+	public void setos_v(String val) {
+		os_v = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public Gen_os_os_vGenOS_OSV() {
+	}
+
+   public static String getMatcher(String regex, String source) {  
+       String result = "";  
+       Pattern pattern = Pattern.compile(regex);  
+       Matcher matcher = pattern.matcher(source);  
+       while (matcher.find()) {  
+           result = matcher.group(1);
+       }  
+       return result;  
+   }  
+
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String urlua
+	Out : String os
+	Out : String os_v
+* Available Variables: DO NOT MODIFY *****/
+			urlua = urlua.toLowerCase();
+			os="unknown";
+			for (Enum ose : osenum.values()) {
+				if (urlua.contains(ose.name())) {
+					os = ose.name();
+					break;
+				}
+				}
+			os_v = urlua.replaceAll("_", ".");
+//			String regex2 = "(\\d+\\.\\d(\\.\\d)*)";
+			String regex2 = "(\\([^)]*\\d+\\.\\d(\\.\\d)*[^(]*\\))";
+			try {
+				os_v= getMatcher(regex2, os_v);
+			} catch (Exception e) {
+			}
+
+			regex2 = "(\\d+\\.\\d(\\.\\d)*)";
+			try {
+				os_v= getMatcher(regex2, os_v);
+			} catch (Exception e) {
+			}
+}
+}
+</fullsource>
+            <inputData>
+                <row>
+                    <fieldName>urlua</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <outputData>
+                <row>
+                    <fieldName>os</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>os_v</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <byteCode>
+                <class>
+                    <name>Gen_os_os_vGenOS_OSV$osenum</name>
+                    <byteCode>yv66vgAAADMAOQkABAAoCgApACoHABkHACwKABAALQoAEAAuCAARCgAEAC8JAAQAMAgAFQkABAAxCAAWCQAEADIIABcJAAQAMwcANAEABmlwaG9uZQEABm9zZW51bQEADElubmVyQ2xhc3NlcwEAO0xTdWJQcm9jZXNzL0xldmVsMy9HZW5fb3Nfb3Nfdi9HZW5fb3Nfb3Nfdkdlbk9TX09TViRvc2VudW07AQAEaXBhZAEAB2FuZHJvaWQBAAVsaW51eAEAByRWQUxVRVMBADxbTFN1YlByb2Nlc3MvTGV2ZWwzL0dlbl9vc19vc192L0dlbl9vc19vc192R2VuT1NfT1NWJG9zZW51bTsBAAZ2YWx1ZXMBAD4oKVtMU3ViUHJvY2Vzcy9MZXZlbDMvR2VuX29zX29zX3YvR2VuX29zX29zX3ZHZW5PU19PU1Ykb3NlbnVtOwEABENvZGUBAA9MaW5lTnVtYmVyVGFibGUBAAd2YWx1ZU9mAQBPKExqYXZhL2xhbmcvU3RyaW5nOylMU3ViUHJvY2Vzcy9MZXZlbDMvR2VuX29zX29zX3YvR2VuX29zX29zX3ZHZW5PU19PU1Ykb3NlbnVtOwEABjxpbml0PgEAFihMamF2YS9sYW5nL1N0cmluZztJKVYBAAlTaWduYXR1cmUBAAMoKVYBAAg8Y2xpbml0PgEATUxqYXZhL2xhbmcvRW51bTxMU3ViUHJvY2Vzcy9MZXZlbDMvR2VuX29zX29zX3YvR2VuX29zX29zX3ZHZW5PU19PU1Ykb3NlbnVtOz47AQAKU291cmNlRmlsZQEAGUdlbl9vc19vc192R2VuT1NfT1NWLmphdmEMABgAGQcAGQwANQA2BwA3AQA5U3ViUHJvY2Vzcy9MZXZlbDMvR2VuX29zX29zX3YvR2VuX29zX29zX3ZHZW5PU19PU1Ykb3NlbnVtDAAeADgMACAAIQwAIAAhDAARABQMABUAFAwAFgAUDAAXABQBAA5qYXZhL2xhbmcvRW51bQEABWNsb25lAQAUKClMamF2YS9sYW5nL09iamVjdDsBADJTdWJQcm9jZXNzL0xldmVsMy9HZW5fb3Nfb3Nfdi9HZW5fb3Nfb3Nfdkdlbk9TX09TVgEANShMamF2YS9sYW5nL0NsYXNzO0xqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL0VudW07QDAABAAQAAAABUAZABEAFAAAQBkAFQAUAABAGQAWABQAAEAZABcAFAAAEBoAGAAZAAAABAAJABoAGwABABwAAAAiAAEAAAAAAAqyAAG2AALAAAOwAAAAAQAdAAAABgABAAAACQAJAB4AHwABABwAAAAjAAIAAQAAAAsTAAQquAAFwAAEsAAAAAEAHQAAAAYAAQAAAAkAAgAgACEAAgAcAAAAHwADAAMAAAAHKisctwAGsQAAAAEAHQAAAAYAAQAAAAkAIgAAAAIAIwAIACQAIwABABwAAABwAAQAAAAAAFS7AARZEgcDtwAIswAJuwAEWRIKBLcACLMAC7sABFkSDAW3AAizAA27AARZEg4GtwAIswAPB70ABFkDsgAJU1kEsgALU1kFsgANU1kGsgAPU7MAAbEAAAABAB0AAAAKAAIAAAAKADQACQADACIAAAACACUAJgAAAAIAJwATAAAACgABAAQAKwASQBg=</byteCode>
+                </class>
+                <class>
+                    <name>Gen_os_os_vGenOS_OSV</name>
+                    <byteCode>yv66vgAAADMAaAkAFgA4CQAWADkJABYAOgoAFwA7CAA8CgA9AD4KAD0APwoAQABBCgBAAEIKAEMARAgARQoAGABGCgBHAEgKAEMASQgASggASwoAQwBMCABNCgAWAE4HAE8IAFAHAFEHAFIHAFMBAAZvc2VudW0BAAxJbm5lckNsYXNzZXMBAAV1cmx1YQEAEkxqYXZhL2xhbmcvU3RyaW5nOwEAAm9zAQAEb3NfdgEACGdldHVybHVhAQAUKClMamF2YS9sYW5nL1N0cmluZzsBAARDb2RlAQAPTGluZU51bWJlclRhYmxlAQAIc2V0dXJsdWEBABUoTGphdmEvbGFuZy9TdHJpbmc7KVYBAAVnZXRvcwEABXNldG9zAQAHZ2V0b3NfdgEAB3NldG9zX3YBAAY8aW5pdD4BAAMoKVYBAApnZXRNYXRjaGVyAQA4KExqYXZhL2xhbmcvU3RyaW5nO0xqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL1N0cmluZzsBAA1TdGFja01hcFRhYmxlBwBUBwBVBwBWAQAGaW52b2tlBwBXBwBRBwBPAQAKRXhjZXB0aW9ucwEAClNvdXJjZUZpbGUBABlHZW5fb3Nfb3Nfdkdlbk9TX09TVi5qYXZhDAAbABwMAB0AHAwAHgAcDAApACoBAAAHAFUMAFgAWQwAWgBbBwBWDABcAF0MAF4AXwcAVAwAYAAgAQAHdW5rbm93bgwAYQBiBwBjDABkACAMAGUAZgEAAV8BAAEuDABnACwBAB4oXChbXildKlxkK1wuXGQoXC5cZCkqW14oXSpcKSkMACsALAEAE2phdmEvbGFuZy9FeGNlcHRpb24BABAoXGQrXC5cZChcLlxkKSopAQAyU3ViUHJvY2Vzcy9MZXZlbDMvR2VuX29zX29zX3YvR2VuX29zX29zX3ZHZW5PU19PU1YBABBqYXZhL2xhbmcvT2JqZWN0AQA5U3ViUHJvY2Vzcy9MZXZlbDMvR2VuX29zX29zX3YvR2VuX29zX29zX3ZHZW5PU19PU1Ykb3NlbnVtAQAQamF2YS9sYW5nL1N0cmluZwEAF2phdmEvdXRpbC9yZWdleC9QYXR0ZXJuAQAXamF2YS91dGlsL3JlZ2V4L01hdGNoZXIBADxbTFN1YlByb2Nlc3MvTGV2ZWwzL0dlbl9vc19vc192L0dlbl9vc19vc192R2VuT1NfT1NWJG9zZW51bTsBAAdjb21waWxlAQAtKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS91dGlsL3JlZ2V4L1BhdHRlcm47AQAHbWF0Y2hlcgEAMyhMamF2YS9sYW5nL0NoYXJTZXF1ZW5jZTspTGphdmEvdXRpbC9yZWdleC9NYXRjaGVyOwEABGZpbmQBAAMoKVoBAAVncm91cAEAFShJKUxqYXZhL2xhbmcvU3RyaW5nOwEAC3RvTG93ZXJDYXNlAQAGdmFsdWVzAQA+KClbTFN1YlByb2Nlc3MvTGV2ZWwzL0dlbl9vc19vc192L0dlbl9vc19vc192R2VuT1NfT1NWJG9zZW51bTsBAA5qYXZhL2xhbmcvRW51bQEABG5hbWUBAAhjb250YWlucwEAGyhMamF2YS9sYW5nL0NoYXJTZXF1ZW5jZTspWgEACnJlcGxhY2VBbGwAIQAWABcAAAADAAQAGwAcAAAABAAdABwAAAAEAB4AHAAAAAkAAQAfACAAAQAhAAAAHQABAAEAAAAFKrQAAbAAAAABACIAAAAGAAEAAAASAAEAIwAkAAEAIQAAACIAAgACAAAABiortQABsQAAAAEAIgAAAAoAAgAAABUABQAWAAEAJQAgAAEAIQAAAB0AAQABAAAABSq0AAKwAAAAAQAiAAAABgABAAAAGAABACYAJAABACEAAAAiAAIAAgAAAAYqK7UAArEAAAABACIAAAAKAAIAAAAbAAUAHAABACcAIAABACEAAAAdAAEAAQAAAAUqtAADsAAAAAEAIgAAAAYAAQAAAB4AAQAoACQAAQAhAAAAIgACAAIAAAAGKiu1AAOxAAAAAQAiAAAACgACAAAAIQAFACIAAQApACoAAQAhAAAAPwACAAEAAAAXKrcABCoSBbUAASoSBbUAAioSBbUAA7EAAAABACIAAAAWAAUAAAAkAAQADgAKAA8AEAAQABYAJQAJACsALAABACEAAABkAAIABQAAACMSBU0quAAGTi0rtgAHOgQZBLYACJkADRkEBLYACU2n//EssAAAAAIAIgAAABoABgAAACgAAwApAAgAKgAPACsAFwAsACEALgAtAAAADwAC/gAPBwAuBwAvBwAwEQABADEAKgACACEAAAENAAQABQAAAHsqKrQAAbYACrUAASoSC7UAArgADEwrvj0DPh0cogApKx0yOgQqtAABGQS2AA22AA6ZAA8qGQS2AA21AAKnAAmEAwGn/9gqKrQAARIPEhC2ABG1AAMSEkwqKyq0AAO4ABO1AAOnAARNEhVMKisqtAADuAATtQADpwAETbEAAgBXAGMAZgAUAGoAdgB5ABQAAgAiAAAARgARAAAANwALADgAEQA5ACQAOgAzADsAPAA8AD8AOQBFAD8AVABBAFcAQwBjAEUAZgBEAGcARwBqAEkAdgBLAHkASgB6AEwALQAAACQAB/4AGgcAMgEBJPgABf8AIAACBwAzBwAuAAEHADQAUQcANAAANQAAAAQAAQAUAAIANgAAAAIANwAaAAAACgABABgAFgAZQBg=</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput>
+                <xsl:if test="$Start/root/urlua">
+                    <urlua>
+                        <xsl:value-of select="$Start/root/urlua"/>
+                    </urlua>
+                </xsl:if>
+            </javaCodeActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>Rethrow</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>GenOS_OSV</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GenOS_OSV</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

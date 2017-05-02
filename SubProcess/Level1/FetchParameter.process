@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx="http://www.tibco.com/ns/no_namespace_schema_location/SubProcess/RedisData.xsd">
+    <xsd:import namespace="http://www.tibco.com/ns/no_namespace_schema_location/SubProcess/RedisData.xsd" schemaLocation="/SubProcess/RedisData.xsd"/>
+    <pd:name>SubProcess/Level1/FetchParameter.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="paramstr" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="isEvent" type="xsd:int" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>150</pd:startX>
+    <pd:startY>64</pd:startY>
+    <pd:returnBindings>
+        <xsl:for-each select="$GetAllParams/javaCodeActivityOutput">
+            <GetAllParamEnd>
+                <xsl:if test="campaign_id">
+                    <campaign_id>
+                        <xsl:value-of select="campaign_id"/>
+                    </campaign_id>
+                </xsl:if>
+                <xsl:if test="cid">
+                    <cid>
+                        <xsl:value-of select="cid"/>
+                    </cid>
+                </xsl:if>
+                <xsl:if test="eventname">
+                    <eventname>
+                        <xsl:value-of select="eventname"/>
+                    </eventname>
+                </xsl:if>
+                <xsl:if test="mode">
+                    <mode>
+                        <xsl:value-of select="mode"/>
+                    </mode>
+                </xsl:if>
+                <xsl:if test="parameterjson">
+                    <parameterjson>
+                        <xsl:value-of select="parameterjson"/>
+                    </parameterjson>
+                </xsl:if>
+                <xsl:if test="urlua">
+                    <urlua>
+                        <xsl:value-of select="urlua"/>
+                    </urlua>
+                </xsl:if>
+            </GetAllParamEnd>
+        </xsl:for-each>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType ref="pfx:GetAllParamEnd"/>
+    <pd:endX>450</pd:endX>
+    <pd:endY>64</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1488512401853</pd:targetNamespace>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>102</pd:x>
+        <pd:y>149</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Rethrow">
+        <pd:type>com.tibco.pe.core.RethrowActivity</pd:type>
+        <pd:resourceType>ae.activities.rethrow</pd:resourceType>
+        <pd:x>317</pd:x>
+        <pd:y>148</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="GetAllParams">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>290</pd:x>
+        <pd:y>64</pd:y>
+        <config>
+            <fileName>FetchParameterGetAllParams</fileName>
+            <packageName>SubProcess.Level1.FetchParameter</packageName>
+            <fullsource>package SubProcess.Level1.FetchParameter;
+import java.util.*;
+import java.io.*;
+import net.sf.json.JSONObject;  
+public class FetchParameterGetAllParams{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String paramstr = "";
+	protected int isEvent = 0;
+	protected String eventname = "";
+	protected String campaign_id = "";
+	protected String cid = "";
+	protected String mode = "";
+	protected String urlua = "";
+	protected String parameterjson = "";
+	public String getparamstr() {
+		return paramstr;
+	}
+	public void setparamstr(String val) {
+		paramstr = val;
+	}
+	public int getisEvent() {
+		return isEvent;
+	}
+	public void setisEvent(int val) {
+		isEvent = val;
+	}
+	public String geteventname() {
+		return eventname;
+	}
+	public void seteventname(String val) {
+		eventname = val;
+	}
+	public String getcampaign_id() {
+		return campaign_id;
+	}
+	public void setcampaign_id(String val) {
+		campaign_id = val;
+	}
+	public String getcid() {
+		return cid;
+	}
+	public void setcid(String val) {
+		cid = val;
+	}
+	public String getmode() {
+		return mode;
+	}
+	public void setmode(String val) {
+		mode = val;
+	}
+	public String geturlua() {
+		return urlua;
+	}
+	public void seturlua(String val) {
+		urlua = val;
+	}
+	public String getparameterjson() {
+		return parameterjson;
+	}
+	public void setparameterjson(String val) {
+		parameterjson = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public FetchParameterGetAllParams() {
+	}
+
+public double ObjectTODouble(Object doubleObj)  
+    {  
+        return Double.valueOf(!(String.valueOf(doubleObj)==null||String.valueOf(doubleObj).equals("null"))?String.valueOf(doubleObj):"0");  
+    }  
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String paramstr
+	In  : int isEvent
+	Out : String eventname
+	Out : String campaign_id
+	Out : String cid
+	Out : String mode
+	Out : String urlua
+	Out : String parameterjson
+* Available Variables: DO NOT MODIFY *****/
+		JSONObject ParamMap = new JSONObject();
+		String[] allparamstr_array, param_array;
+		allparamstr_array = paramstr.split("[&amp;]");
+		for (String param_i : allparamstr_array) {
+			param_array = param_i.split("[=]");
+			if (param_array.length &gt; 1) 
+				ParamMap.put(param_array[0], param_array[1]);
+		}
+		campaign_id = (String)ParamMap.get("campaign_id");
+		
+		cid = (String)ParamMap.get("cid");
+		mode = (String)ParamMap.get("mode");
+		urlua = (String)ParamMap.get("ua");
+		
+		//ParamMap.remove("campaign_id");
+		parameterjson=ParamMap.toString();
+}
+}
+</fullsource>
+            <inputData>
+                <row>
+                    <fieldName>paramstr</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>isEvent</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <outputData>
+                <row>
+                    <fieldName>eventname</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>campaign_id</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>cid</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>mode</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>urlua</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>parameterjson</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <byteCode>
+                <class>
+                    <name>FetchParameterGetAllParams</name>
+                    <byteCode>yv66vgAAADMAewkAHgBOCQAeAE8JAB4AUAkAHgBRCQAeAFIJAB4AUwkAHgBUCQAeAFUKAB8AVggAVwoAGQBYCABZCgAZAFoIAFsKAFwAXQoAXABeBwBfCgARAFYIAGAKABkAYQgAYgoAEQBjCAAlCgARAGQHAGUIACYIACcIAGYKABEAZwcAaAcAaQEACHBhcmFtc3RyAQASTGphdmEvbGFuZy9TdHJpbmc7AQAHaXNFdmVudAEAAUkBAAlldmVudG5hbWUBAAtjYW1wYWlnbl9pZAEAA2NpZAEABG1vZGUBAAV1cmx1YQEADXBhcmFtZXRlcmpzb24BAAtnZXRwYXJhbXN0cgEAFCgpTGphdmEvbGFuZy9TdHJpbmc7AQAEQ29kZQEAD0xpbmVOdW1iZXJUYWJsZQEAC3NldHBhcmFtc3RyAQAVKExqYXZhL2xhbmcvU3RyaW5nOylWAQAKZ2V0aXNFdmVudAEAAygpSQEACnNldGlzRXZlbnQBAAQoSSlWAQAMZ2V0ZXZlbnRuYW1lAQAMc2V0ZXZlbnRuYW1lAQAOZ2V0Y2FtcGFpZ25faWQBAA5zZXRjYW1wYWlnbl9pZAEABmdldGNpZAEABnNldGNpZAEAB2dldG1vZGUBAAdzZXRtb2RlAQAIZ2V0dXJsdWEBAAhzZXR1cmx1YQEAEGdldHBhcmFtZXRlcmpzb24BABBzZXRwYXJhbWV0ZXJqc29uAQAGPGluaXQ+AQADKClWAQAOT2JqZWN0VE9Eb3VibGUBABUoTGphdmEvbGFuZy9PYmplY3Q7KUQBAA1TdGFja01hcFRhYmxlBwBlAQAGaW52b2tlBwBoBwBfBwBqAQAKRXhjZXB0aW9ucwcAawEAClNvdXJjZUZpbGUBAB9GZXRjaFBhcmFtZXRlckdldEFsbFBhcmFtcy5qYXZhDAAgACEMACIAIwwAJAAhDAAlACEMACYAIQwAJwAhDAAoACEMACkAIQwAQABBAQAADABsAG0BAARudWxsDABuAG8BAAEwBwBwDABsAHEMAHIAcwEAFm5ldC9zZi9qc29uL0pTT05PYmplY3QBAANbJl0MAHQAdQEAA1s9XQwAdgB3DAB4AHkBABBqYXZhL2xhbmcvU3RyaW5nAQACdWEMAHoAKwEAO1N1YlByb2Nlc3MvTGV2ZWwxL0ZldGNoUGFyYW1ldGVyL0ZldGNoUGFyYW1ldGVyR2V0QWxsUGFyYW1zAQAQamF2YS9sYW5nL09iamVjdAEAE1tMamF2YS9sYW5nL1N0cmluZzsBABNqYXZhL2xhbmcvRXhjZXB0aW9uAQAHdmFsdWVPZgEAJihMamF2YS9sYW5nL09iamVjdDspTGphdmEvbGFuZy9TdHJpbmc7AQAGZXF1YWxzAQAVKExqYXZhL2xhbmcvT2JqZWN0OylaAQAQamF2YS9sYW5nL0RvdWJsZQEAJihMamF2YS9sYW5nL1N0cmluZzspTGphdmEvbGFuZy9Eb3VibGU7AQALZG91YmxlVmFsdWUBAAMoKUQBAAVzcGxpdAEAJyhMamF2YS9sYW5nL1N0cmluZzspW0xqYXZhL2xhbmcvU3RyaW5nOwEAA3B1dAEAOChMamF2YS9sYW5nL09iamVjdDtMamF2YS9sYW5nL09iamVjdDspTGphdmEvbGFuZy9PYmplY3Q7AQADZ2V0AQAmKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL09iamVjdDsBAAh0b1N0cmluZwAhAB4AHwAAAAgABAAgACEAAAAEACIAIwAAAAQAJAAhAAAABAAlACEAAAAEACYAIQAAAAQAJwAhAAAABAAoACEAAAAEACkAIQAAABMAAQAqACsAAQAsAAAAHQABAAEAAAAFKrQAAbAAAAABAC0AAAAGAAEAAAAQAAEALgAvAAEALAAAACIAAgACAAAABiortQABsQAAAAEALQAAAAoAAgAAABMABQAUAAEAMAAxAAEALAAAAB0AAQABAAAABSq0AAKsAAAAAQAtAAAABgABAAAAFgABADIAMwABACwAAAAiAAIAAgAAAAYqG7UAArEAAAABAC0AAAAKAAIAAAAZAAUAGgABADQAKwABACwAAAAdAAEAAQAAAAUqtAADsAAAAAEALQAAAAYAAQAAABwAAQA1AC8AAQAsAAAAIgACAAIAAAAGKiu1AAOxAAAAAQAtAAAACgACAAAAHwAFACAAAQA2ACsAAQAsAAAAHQABAAEAAAAFKrQABLAAAAABAC0AAAAGAAEAAAAiAAEANwAvAAEALAAAACIAAgACAAAABiortQAEsQAAAAEALQAAAAoAAgAAACUABQAmAAEAOAArAAEALAAAAB0AAQABAAAABSq0AAWwAAAAAQAtAAAABgABAAAAKAABADkALwABACwAAAAiAAIAAgAAAAYqK7UABbEAAAABAC0AAAAKAAIAAAArAAUALAABADoAKwABACwAAAAdAAEAAQAAAAUqtAAGsAAAAAEALQAAAAYAAQAAAC4AAQA7AC8AAQAsAAAAIgACAAIAAAAGKiu1AAaxAAAAAQAtAAAACgACAAAAMQAFADIAAQA8ACsAAQAsAAAAHQABAAEAAAAFKrQAB7AAAAABAC0AAAAGAAEAAAA0AAEAPQAvAAEALAAAACIAAgACAAAABiortQAHsQAAAAEALQAAAAoAAgAAADcABQA4AAEAPgArAAEALAAAAB0AAQABAAAABSq0AAiwAAAAAQAtAAAABgABAAAAOgABAD8ALwABACwAAAAiAAIAAgAAAAYqK7UACLEAAAABAC0AAAAKAAIAAAA9AAUAPgABAEAAQQABACwAAABwAAIAAQAAADQqtwAJKhIKtQABKgO1AAIqEgq1AAMqEgq1AAQqEgq1AAUqEgq1AAYqEgq1AAcqEgq1AAixAAAAAQAtAAAAKgAKAAAAQAAEAAcACgAIAA8ACQAVAAoAGwALACEADAAnAA0ALQAOADMAQQABAEIAQwABACwAAABIAAIAAgAAACMruAALxgAWK7gACxIMtgANmgAKK7gAC6cABRIOuAAPtgAQrwAAAAIALQAAAAYAAQAAAEUARAAAAAcAAhpBBwBFAAEARgBBAAIALAAAARUABAAIAAAAh7sAEVm3ABJMKrQAARITtgAUTSw6BBkEvjYFAzYGFQYVBaIAKRkEFQYyOgcZBxIVtgAUTi2+BKQADistAzItBDK2ABZXhAYBp//WKisSF7YAGMAAGbUABCorEhq2ABjAABm1AAUqKxIbtgAYwAAZtQAGKisSHLYAGMAAGbUAByortgAdtQAIsQAAAAIALQAAADYADQAAAFIACABUABIAVQArAFYAMwBXADkAWABEAFUASgBaAFcAXABkAF0AcQBeAH4AYQCGAGIARAAAAEAAA/8AHQAHBwBHBwBIBwBJAAcASQEBAAD/ACYABwcARwcASAcASQcASQcASQEBAAD/AAUAAwcARwcASAcASQAAAEoAAAAEAAEASwABAEwAAAACAE0=</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput>
+                <xsl:if test="$Start/root/paramstr">
+                    <paramstr>
+                        <xsl:value-of select="$Start/root/paramstr"/>
+                    </paramstr>
+                </xsl:if>
+                <xsl:if test="$Start/root/isEvent">
+                    <isEvent>
+                        <xsl:value-of select="$Start/root/isEvent"/>
+                    </isEvent>
+                </xsl:if>
+            </javaCodeActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>Rethrow</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>GetAllParams</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GetAllParams</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

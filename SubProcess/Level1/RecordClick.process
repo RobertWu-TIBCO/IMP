@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="www.tibco.com/plugin/Sleep" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:pfx="http://www.tibco.com/ns/no_namespace_schema_location/SubProcess/RedisData.xsd">
+    <xsd:import namespace="http://www.tibco.com/ns/no_namespace_schema_location/SubProcess/RedisData.xsd" schemaLocation="/SubProcess/RedisData.xsd"/>
+    <pd:name>SubProcess/Level1/RecordClick.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element ref="pfx:cep_log_imp" minOccurs="0"/>
+                    <xsd:element name="lastjson" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="collectionname" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>50</pd:startX>
+    <pd:startY>73</pd:startY>
+    <pd:returnBindings/>
+    <pd:endName>End</pd:endName>
+    <pd:endX>198</pd:endX>
+    <pd:endY>189</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1488512401853</pd:targetNamespace>
+    <pd:activity name="WriteMongoDB">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>58</pd:x>
+        <pd:y>189</pd:y>
+        <config>
+            <processName>/SubProcess/Level2/WriteMongo.process</processName>
+            <processNameXPath/>
+            <spawn>false</spawn>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <dbname>
+                    <xsl:value-of select="&quot;mclog&quot;"/>
+                </dbname>
+                <xsl:if test="$Start/root/collectionname">
+                    <collectionname>
+                        <xsl:value-of select="$Start/root/collectionname"/>
+                    </collectionname>
+                </xsl:if>
+                <xsl:if test="$Start/root/lastjson">
+                    <inputjson>
+                        <xsl:value-of select="$Start/root/lastjson"/>
+                    </inputjson>
+                </xsl:if>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>WriteMongoDB</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>WriteMongoDB</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

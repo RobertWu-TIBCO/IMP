@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <pd:name>SubProcess/Level2/timerelated.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="ts" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="dateTime" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="disable" type="xsd:int" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>240</pd:startX>
+    <pd:startY>103</pd:startY>
+    <pd:returnBindings>
+        <root>
+            <xsl:if test="$SplitTS/root/clickday">
+                <day>
+                    <xsl:value-of select="$SplitTS/root/clickday"/>
+                </day>
+            </xsl:if>
+            <xsl:if test="$SplitTS/root/clicksec">
+                <sec>
+                    <xsl:value-of select="$SplitTS/root/clicksec"/>
+                </sec>
+            </xsl:if>
+            <xsl:if test="$SplitTS/root/dayThour">
+                <dayThour>
+                    <xsl:value-of select="$SplitTS/root/dayThour"/>
+                </dayThour>
+            </xsl:if>
+        </root>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="day" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="sec" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="dayThour" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>569</pd:endX>
+    <pd:endY>106</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1488512401853</pd:targetNamespace>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>102</pd:x>
+        <pd:y>149</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Rethrow">
+        <pd:type>com.tibco.pe.core.RethrowActivity</pd:type>
+        <pd:resourceType>ae.activities.rethrow</pd:resourceType>
+        <pd:x>104</pd:x>
+        <pd:y>47</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="SplitTS">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>402</pd:x>
+        <pd:y>162</pd:y>
+        <config>
+            <processName>/SubProcess/Level2/ClicktsSplit.process</processName>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <xsl:if test="$Start/root/ts">
+                    <clickts>
+                        <xsl:value-of select="$Start/root/ts"/>
+                    </clickts>
+                </xsl:if>
+                <xsl:if test="$Start/root/disable">
+                    <disable>
+                        <xsl:value-of select="$Start/root/disable"/>
+                    </disable>
+                </xsl:if>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="UseDateTime">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>395</pd:x>
+        <pd:y>36</pd:y>
+        <config>
+            <processName>/SubProcess/Level2/dateTimeFormat.process</processName>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <xsl:if test="$Start/root/dateTime">
+                    <dateTime>
+                        <xsl:value-of select="$Start/root/dateTime"/>
+                    </dateTime>
+                </xsl:if>
+                <xsl:if test="$Start/root/disable">
+                    <disable>
+                        <xsl:value-of select="$Start/root/disable"/>
+                    </disable>
+                </xsl:if>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>Rethrow</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>UseDateTime</pd:to>
+        <pd:xpathDescription>Use DateTime</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>SplitTS</pd:to>
+        <pd:xpathDescription>Use TS</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>$Start/root/ts</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SplitTS</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>UseDateTime</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

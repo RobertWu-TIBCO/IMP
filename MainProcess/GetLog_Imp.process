@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:pfx="http://www.tibco.com/ns/no_namespace_schema_location/SubProcess/RedisData.xsd">
+    <xsd:import namespace="http://www.tibco.com/ns/no_namespace_schema_location/SubProcess/RedisData.xsd" schemaLocation="/SubProcess/RedisData.xsd"/>
+    <pd:name>MainProcess/GetLog_Imp.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx:cep_log_imp"/>
+    <pd:startX>26</pd:startX>
+    <pd:startY>54</pd:startY>
+    <pd:returnBindings/>
+    <pd:endName>End</pd:endName>
+    <pd:endX>408</pd:endX>
+    <pd:endY>192</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1488533853861</pd:targetNamespace>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>437</pd:x>
+        <pd:y>37</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="SetCount">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>118</pd:x>
+        <pd:y>178</pd:y>
+        <config>
+            <processName>/SubProcess/Level1/SetCount.process</processName>
+            <spawn>true</spawn>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <campaign_id>
+                    <xsl:value-of select="$Start/cep_log_imp/ImpMessage/campaign_id"/>
+                </campaign_id>
+                <offer_id>
+                    <xsl:value-of select="$Start/cep_log_imp/ImpMessage/offer_id"/>
+                </offer_id>
+                <n_id>
+                    <xsl:value-of select="$Start/cep_log_imp/ImpMessage/n_id"/>
+                </n_id>
+                <eventname>
+                    <xsl:value-of select="$Start/cep_log_imp/eventname"/>
+                </eventname>
+                <day>
+                    <xsl:value-of select="$Start/cep_log_imp/ImpMessage/imp_day"/>
+                </day>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="RecordClick">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>237</pd:x>
+        <pd:y>59</pd:y>
+        <config>
+            <processName>/SubProcess/Level1/RecordClick.process</processName>
+            <spawn>true</spawn>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <xsl:copy-of select="$Start/cep_log_imp"/>
+                <lastjson>
+                    <xsl:value-of select="$Start/cep_log_imp/lastjson"/>
+                </lastjson>
+                <collectionname>
+                    <xsl:value-of select="concat(&quot;imp_&quot;,$Start/cep_log_imp/ImpMessage/imp_day)"/>
+                </collectionname>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Rethrow">
+        <pd:type>com.tibco.pe.core.RethrowActivity</pd:type>
+        <pd:resourceType>ae.activities.rethrow</pd:resourceType>
+        <pd:x>615</pd:x>
+        <pd:y>169</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>SetCount</pd:from>
+        <pd:to>RecordClick</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>RecordClick</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>SetCount</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>Rethrow</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

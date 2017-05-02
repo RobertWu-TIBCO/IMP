@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <pd:name>SubProcess/Level2/RandomNumber.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="max" type="xsd:int" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>150</pd:startX>
+    <pd:startY>64</pd:startY>
+    <pd:returnBindings>
+        <root>
+            <xsl:if test="$RandomNumber/javaCodeActivityOutput/randomresult">
+                <randomresult>
+                    <xsl:value-of select="$RandomNumber/javaCodeActivityOutput/randomresult"/>
+                </randomresult>
+            </xsl:if>
+        </root>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="randomresult" type="xsd:int" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>450</pd:endX>
+    <pd:endY>64</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1488512401853</pd:targetNamespace>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>102</pd:x>
+        <pd:y>149</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Rethrow">
+        <pd:type>com.tibco.pe.core.RethrowActivity</pd:type>
+        <pd:resourceType>ae.activities.rethrow</pd:resourceType>
+        <pd:x>317</pd:x>
+        <pd:y>148</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="RandomNumber">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>290</pd:x>
+        <pd:y>64</pd:y>
+        <config>
+            <fileName>RandomNumberRandomNumber</fileName>
+            <packageName>SubProcess.Level2.RandomNumber</packageName>
+            <fullsource>package SubProcess.Level2.RandomNumber;
+import java.util.*;
+import java.io.*;
+public class RandomNumberRandomNumber{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected int max = 0;
+	protected int randomresult = 0;
+	public int getmax() {
+		return max;
+	}
+	public void setmax(int val) {
+		max = val;
+	}
+	public int getrandomresult() {
+		return randomresult;
+	}
+	public void setrandomresult(int val) {
+		randomresult = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public RandomNumberRandomNumber() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : int max
+	Out : int randomresult
+* Available Variables: DO NOT MODIFY *****/
+
+Random rand =new Random();
+
+randomresult=rand.nextInt(max);}
+}
+</fullsource>
+            <inputData>
+                <row>
+                    <fieldName>max</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <outputData>
+                <row>
+                    <fieldName>randomresult</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <byteCode>
+                <class>
+                    <name>RandomNumberRandomNumber</name>
+                    <byteCode>yv66vgAAADMAJQkABwAbCQAHABwKAAgAHQcAHgoABAAdCgAEAB8HACAHACEBAANtYXgBAAFJAQAMcmFuZG9tcmVzdWx0AQAGZ2V0bWF4AQADKClJAQAEQ29kZQEAD0xpbmVOdW1iZXJUYWJsZQEABnNldG1heAEABChJKVYBAA9nZXRyYW5kb21yZXN1bHQBAA9zZXRyYW5kb21yZXN1bHQBAAY8aW5pdD4BAAMoKVYBAAZpbnZva2UBAApFeGNlcHRpb25zBwAiAQAKU291cmNlRmlsZQEAHVJhbmRvbU51bWJlclJhbmRvbU51bWJlci5qYXZhDAAJAAoMAAsACgwAFAAVAQAQamF2YS91dGlsL1JhbmRvbQwAIwAkAQA3U3ViUHJvY2Vzcy9MZXZlbDIvUmFuZG9tTnVtYmVyL1JhbmRvbU51bWJlclJhbmRvbU51bWJlcgEAEGphdmEvbGFuZy9PYmplY3QBABNqYXZhL2xhbmcvRXhjZXB0aW9uAQAHbmV4dEludAEABChJKUkAIQAHAAgAAAACAAQACQAKAAAABAALAAoAAAAGAAEADAANAAEADgAAAB0AAQABAAAABSq0AAGsAAAAAQAPAAAABgABAAAACQABABAAEQABAA4AAAAiAAIAAgAAAAYqG7UAAbEAAAABAA8AAAAKAAIAAAAMAAUADQABABIADQABAA4AAAAdAAEAAQAAAAUqtAACrAAAAAEADwAAAAYAAQAAAA8AAQATABEAAQAOAAAAIgACAAIAAAAGKhu1AAKxAAAAAQAPAAAACgACAAAAEgAFABMAAQAUABUAAQAOAAAAMwACAAEAAAAPKrcAAyoDtQABKgO1AAKxAAAAAQAPAAAAEgAEAAAAFQAEAAYACQAHAA4AFgABABYAFQACAA4AAAAxAAMAAgAAABW7AARZtwAFTCorKrQAAbYABrUAArEAAAABAA8AAAAKAAIAAAAdAAgAHwAXAAAABAABABgAAQAZAAAAAgAa</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput>
+                <xsl:if test="$Start/root/max">
+                    <max>
+                        <xsl:value-of select="$Start/root/max"/>
+                    </max>
+                </xsl:if>
+            </javaCodeActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>Rethrow</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>RandomNumber</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>RandomNumber</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

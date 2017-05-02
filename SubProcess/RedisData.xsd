@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	 elementFormDefault="unqualified"
+	 attributeFormDefault="unqualified">
+	 
+	 	<xsd:complexType name="HeaderJson">
+		<xsd:sequence>
+<xsd:element name="campaign_id" type="xsd:int" minOccurs="0"/>
+<xsd:element name="campaign_rm" type="xsd:double" minOccurs="0"/>
+<xsd:element name="cid" type="xsd:string" minOccurs="0"/>
+<xsd:element name="clickid" type="xsd:string" minOccurs="0"/>
+<xsd:element name="click_day" type="xsd:string" minOccurs="0"/>
+<xsd:element name="click_sec" type="xsd:string" minOccurs="0"/>
+<xsd:element name="click_ts" type="xsd:string" minOccurs="0"/>
+<xsd:element name="click_ts10" type="xsd:string" minOccurs="0"/>
+<xsd:element name="offer_active_event" type="xsd:string" minOccurs="0"/>
+<xsd:element name="creative_list" type="xsd:string" minOccurs="0"/>
+<xsd:element name="device" type="xsd:string" minOccurs="0"/>
+<xsd:element name="event_day" type="xsd:string" minOccurs="0"/>
+<xsd:element name="event_sec" type="xsd:string" minOccurs="0"/>
+<xsd:element name="ip" type="xsd:string" minOccurs="0"/>
+<xsd:element name="n_id" type="xsd:int" minOccurs="0"/>
+<xsd:element name="offer_click_tl" type="xsd:string" minOccurs="0"/>
+<xsd:element name="offer_id" type="xsd:int" minOccurs="0"/>
+<xsd:element name="offer_synctype" type="xsd:string" minOccurs="0"/>
+<xsd:element name="os_v" type="xsd:string" minOccurs="0"/>
+<xsd:element name="pl" type="xsd:string" minOccurs="0"/>
+<xsd:element name="product_lp" type="xsd:string" minOccurs="0"/>
+<xsd:element name="replaced_pl" type="xsd:string" minOccurs="0"/>
+<xsd:element name="ua" type="xsd:string" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="HeaderJson_Conversion">
+		<xsd:sequence>
+<xsd:element name="campaign_id" type="xsd:int" minOccurs="0"/>
+<xsd:element name="n_id" type="xsd:int" minOccurs="0"/>
+<xsd:element name="offer_id" type="xsd:int" minOccurs="0"/>
+<xsd:element name="cid" type="xsd:string" minOccurs="0"/>
+<xsd:element name="clickid" type="xsd:string" minOccurs="0"/>
+<xsd:element name="click_day" type="xsd:string" minOccurs="0"/>
+<xsd:element name="click_sec" type="xsd:string" minOccurs="0"/>
+<xsd:element name="click_ts" type="xsd:string" minOccurs="0"/>
+<xsd:element name="event_day" type="xsd:string" minOccurs="0"/>
+<xsd:element name="event_sec" type="xsd:string" minOccurs="0"/>
+<xsd:element name="event_ts" type="xsd:string" minOccurs="0"/>
+<xsd:element name="campaign_rm" type="xsd:string" minOccurs="0"/>
+<xsd:element name="value" type="xsd:double" minOccurs="0"/>
+<xsd:element name="campaign_expend_t" form="unqualified" type="xsd:string" minOccurs="0"/>
+<xsd:element name="campaign_expend_c" form="unqualified" type="xsd:string" minOccurs="0"/>
+<xsd:element name="campaign_expend_n" form="unqualified" type="xsd:string" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+		<xsd:complexType name="HeaderJson_Imp">
+		<xsd:sequence>
+<xsd:element name="campaign_id" type="xsd:int" minOccurs="0"/>
+<xsd:element name="appid" type="xsd:string" minOccurs="0"/>
+<xsd:element name="clickid" type="xsd:string" minOccurs="0"/>
+<xsd:element name="imp_day" type="xsd:string" minOccurs="0"/>
+<xsd:element name="imp_sec" type="xsd:string" minOccurs="0"/>
+<xsd:element name="imp_ts" type="xsd:string" minOccurs="0"/>
+<xsd:element name="imp_ts10" type="xsd:string" minOccurs="0"/>
+<xsd:element name="product_id" type="xsd:int" minOccurs="0"/>
+<xsd:element name="offer_id" type="xsd:int" minOccurs="0"/>
+<xsd:element name="n_id" type="xsd:int" minOccurs="0"/>
+<xsd:element name="device" type="xsd:string" minOccurs="0"/>
+<xsd:element name="os_v" type="xsd:string" minOccurs="0"/>
+<xsd:element name="ip" type="xsd:string" minOccurs="0"/>
+<xsd:element name="ua" type="xsd:string" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	
+	    <xsd:complexType name="RedisData_Click">
+        <xsd:sequence>
+            <xsd:element name="campkey" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="campaign_id" form="unqualified" type="xsd:int" minOccurs="0"/>
+            <xsd:element name="offer_id" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="n_id" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="product_id" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="offer_click_tl" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="product_appid" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="creative_list" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="product_lp" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="campaign_status" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="campaign_rm" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="campaign_expend_t" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="campaign_expend_c" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="campaign_expend_n" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="seat" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="campaign_cap" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="offer_synctype" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="offer_active_event" form="unqualified" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+	
+	
+	  <xsd:complexType name="RedisData_Conversion">
+        <xsd:sequence>
+            <xsd:element name="campkey" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="campaign_id" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="offer_id" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="n_id" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="product_id" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="campaign_status" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="campaign_rm" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="campaign_cap" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="campaign_expend_t" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="campaign_expend_c" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="campaign_expend_n" form="unqualified" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="offer_active_event" form="unqualified" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+	
+	<xsd:complexType name="RedisData">
+		<xsd:sequence>
+		<xsd:element name="appid" type="xsd:string" minOccurs="0"/>
+<xsd:element name="campaign_cap" type="xsd:string" minOccurs="0"/>
+<xsd:element name="campaign_expend_c" type="xsd:string" minOccurs="0"/>
+<xsd:element name="campaign_expend_n" type="xsd:double" minOccurs="0"/>
+<xsd:element name="campaign_expend_t" type="xsd:string" minOccurs="0"/>
+<xsd:element name="campaign_id" type="xsd:int" minOccurs="0"/>
+<xsd:element name="campaign_pl" type="xsd:string" minOccurs="0"/>
+<xsd:element name="campaign_rm" type="xsd:double" minOccurs="0"/>
+<xsd:element name="campaign_status" type="xsd:string" minOccurs="0"/>
+<xsd:element name="campaign_tl" type="xsd:string" minOccurs="0"/>
+<xsd:element name="cid" type="xsd:string" minOccurs="0" maxOccurs="0"/>
+<xsd:element name="clickid" type="xsd:string" minOccurs="0"/>
+<xsd:element name="click_day" type="xsd:string" minOccurs="0"/>
+<xsd:element name="click_sec" type="xsd:string" minOccurs="0"/>
+<xsd:element name="click_ts" type="xsd:string" minOccurs="0"/>
+<xsd:element name="click_ts10" type="xsd:string" minOccurs="0"/>
+<xsd:element name="conversionevent" type="xsd:string" minOccurs="0"/>
+<xsd:element name="campaign_conversion_prameter" type="xsd:string" minOccurs="0"/>
+<xsd:element name="campaign_postevent_parameter" type="xsd:string" minOccurs="0"/>
+<xsd:element name="creative_id" type="xsd:string" minOccurs="0"/>
+<xsd:element name="device" type="xsd:string" minOccurs="0"/>
+<xsd:element name="event_day" type="xsd:string" minOccurs="0"/>
+<xsd:element name="event_sec" type="xsd:string" minOccurs="0"/>
+<xsd:element name="ip" type="xsd:string" minOccurs="0"/>
+<xsd:element name="n_id" type="xsd:int" minOccurs="0"/>
+<xsd:element name="offer_click_tl" type="xsd:string" minOccurs="0"/>
+<xsd:element name="offer_id" type="xsd:int" minOccurs="0"/>
+<xsd:element name="offer_synctype" type="xsd:string" minOccurs="0"/>
+<xsd:element name="os_v" type="xsd:string" minOccurs="0"/>
+<xsd:element name="pl" type="xsd:string" minOccurs="0"/>
+<xsd:element name="product_lp" type="xsd:string" minOccurs="0"/>
+<xsd:element name="replaced_pl" type="xsd:string" minOccurs="0"/>
+<xsd:element name="seat" type="xsd:string" minOccurs="0"/>
+<xsd:element name="type" type="xsd:string" minOccurs="0"/>
+<xsd:element name="ua" type="xsd:string" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="ClickLogJson">
+		<xsd:sequence>
+			<xsd:element name="campaign_id" type="xsd:int" minOccurs="0"/>
+			<xsd:element name="campaign_pl" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="campaign_rm" type="xsd:double" minOccurs="0"/>
+			<xsd:element name="campaign_status" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="campaign_tl" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="cid" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="click_day" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="click_sec" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="click_ts" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="click_ts10" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="event_day" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="event_sec" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="n_id" type="xsd:int" minOccurs="0"/>
+			<xsd:element name="pl" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="offer_click_tl" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="conversionevent" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="offer_id" type="xsd:int" minOccurs="0"/>
+			<xsd:element name="offer_synctype" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="device" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="os_v" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="product_lp" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="ip" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="replaced_pl" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="seat" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="type" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="ua" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="clickid" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="idfa" type="xsd:string" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="GetAllParamEnd">
+		<xsd:sequence>
+<xsd:element name="campaign_id" form="unqualified" type="xsd:string" minOccurs="0"/>
+<xsd:element name="cid" form="unqualified" type="xsd:string" minOccurs="0"/>
+<xsd:element name="clickid" form="unqualified" type="xsd:string" minOccurs="0"/>
+<xsd:element name="eventname" form="unqualified" type="xsd:string" minOccurs="0"/>
+<xsd:element name="mode" form="unqualified" type="xsd:string" minOccurs="0"/>
+<xsd:element name="parameterjson" form="unqualified" type="xsd:string" minOccurs="0"/>
+<xsd:element name="urlua" form="unqualified" type="xsd:string" minOccurs="0"/>
+<xsd:element name="value" form="unqualified" type="xsd:double" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	  <xsd:complexType name="ImpMessage">
+                    <xsd:sequence>
+			  <xsd:element name="clickid" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="imp_day" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="imp_sec" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="imp_ts" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="campaign_id" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="offer_id" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="n_id" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="product_id" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="product_appid" type="xsd:string" minOccurs="0"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+				
+				
+				
+					  <xsd:complexType name="JMSImpLog">
+                    <xsd:sequence>
+					<xsd:element name="ImpMessage" type="ImpMessage" minOccurs="0"/>
+            <xsd:element name="eventname" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="lastjson" type="xsd:string" minOccurs="0"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+			
+			  <xsd:complexType name="PostBack">
+                    <xsd:sequence>
+            <xsd:element name="offer_active_event" type="xsd:string" minOccurs="0"/>
+				    <xsd:element name="replaced_link" type="xsd:string" minOccurs="0"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+				
+			  <xsd:complexType name="JMSConverLog">
+                    <xsd:sequence>
+					<xsd:element name="HeaderJson_Conversion"  type="HeaderJson_Conversion" minOccurs="0"/>
+					<xsd:element name="PostBack" type="PostBack" minOccurs="0"/>
+            <xsd:element name="eventname" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="lastjson" type="xsd:string" minOccurs="0"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+				
+			
+	    <xsd:complexType name="ClickSubEnd">
+        <xsd:sequence>
+           				<xsd:element name="JMSImpLog" type="JMSImpLog" minOccurs="0"/>
+           				<xsd:element name="paramstr" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="offer_click_tl" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="mode" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="product_lp" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="offer_synctype" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="offer_active_event" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+	<xsd:element name="cep_log_imp" type="JMSImpLog"/>
+	<xsd:element name="cep_log_conver" type="JMSConverLog"/>
+	<xsd:element name="HeaderJson" type="HeaderJson"/>
+	<xsd:element name="HeaderJson_Imp" type="HeaderJson_Imp"/>
+	<xsd:element name="HeaderJson_Conversion" type="HeaderJson_Conversion"/>
+	<xsd:element name="RedisData" type="RedisData"/>
+	<xsd:element name="RedisData_Click" type="RedisData_Click"/>
+	<xsd:element name="RedisData_Conversion" type="RedisData_Conversion"/>
+	<xsd:element name="ClickLogJson" type="ClickLogJson"/>
+	<xsd:element name="GetAllParamEnd" type="GetAllParamEnd"/>
+	<xsd:element name="ClickSubEnd" type="ClickSubEnd"/>
+	<xsd:element name="ImpMessage" type="ImpMessage"/>
+</xsd:schema>

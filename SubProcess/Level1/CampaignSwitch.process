@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/pe/DeployedVarsType" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions">
+    <pd:name>SubProcess/Level1/CampaignSwitch.process</pd:name>
+    <pd:description>note if no such key in redis, no key as output</pd:description>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="campaign_id" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="disable" type="xsd:int" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>114</pd:startX>
+    <pd:startY>85</pd:startY>
+    <pd:returnBindings>
+        <root>
+            <xsl:choose>
+                <xsl:when test="$Start/root/disable=1">
+                    <campid>
+                        <xsl:value-of select="$Start/root/campaign_id"/>
+                    </campid>
+                </xsl:when>
+                <xsl:otherwise>
+                    <campid>
+                        <xsl:value-of select="$GetOfferLinkFromRedis/javaCodeActivityOutput/campkey"/>
+                    </campid>
+                </xsl:otherwise>
+            </xsl:choose>
+            <xsl:if test="$GetOfferLinkFromRedis/javaCodeActivityOutput/ranum">
+                <rannum>
+                    <xsl:value-of select="$GetOfferLinkFromRedis/javaCodeActivityOutput/ranum"/>
+                </rannum>
+            </xsl:if>
+        </root>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="campid" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="rannum" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>331</pd:endX>
+    <pd:endY>224</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1488512401853</pd:targetNamespace>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>578</pd:x>
+        <pd:y>37</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Rethrow">
+        <pd:type>com.tibco.pe.core.RethrowActivity</pd:type>
+        <pd:resourceType>ae.activities.rethrow</pd:resourceType>
+        <pd:x>582</pd:x>
+        <pd:y>173</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:group name="Group">
+        <pd:type>com.tibco.pe.core.LoopGroup</pd:type>
+        <pd:resourceType>ae.process.group</pd:resourceType>
+        <pd:x>239</pd:x>
+        <pd:y>1</pd:y>
+        <pd:width>172</pd:width>
+        <pd:height>141</pd:height>
+        <pd:collapsedWidth>57</pd:collapsedWidth>
+        <pd:collapsedHeight>70</pd:collapsedHeight>
+        <pd:groupVariables/>
+        <pd:joinToggle>inherit</pd:joinToggle>
+        <config>
+            <pd:groupType>errorLoop</pd:groupType>
+            <pd:serializable>false</pd:serializable>
+            <pd:indexSlot>finish</pd:indexSlot>
+            <pd:errorCondition>$finish&gt;3</pd:errorCondition>
+            <pd:suspendAfterErrorRetry>false</pd:suspendAfterErrorRetry>
+        </config>
+        <pd:inputBindings/>
+        <pd:expanded>true</pd:expanded>
+        <pd:transition>
+            <pd:from>start</pd:from>
+            <pd:to>GetOfferLinkFromRedis</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>GetOfferLinkFromRedis</pd:from>
+            <pd:to>end</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:activity name="GetOfferLinkFromRedis">
+            <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+            <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+            <pd:x>322</pd:x>
+            <pd:y>81</pd:y>
+            <config>
+                <fileName>CampaignSwitchGetOfferLinkFromRedis</fileName>
+                <packageName>SubProcess.Level1.CampaignSwitch</packageName>
+                <fullsource>package SubProcess.Level1.CampaignSwitch;
+import java.util.*;
+import java.io.*;
+import redis.clients.jedis.Jedis;     
+public class CampaignSwitchGetOfferLinkFromRedis{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String rediskey = "";
+	protected String campkey = "";
+	protected String redishost = "";
+	protected int redisport = 0;
+	protected String redispass = "";
+	protected int campaignrate1 = 0;
+	protected int campaignrate2 = 0;
+	protected int campaignrate3 = 0;
+	protected int ranum = 0;
+	public String getrediskey() {
+		return rediskey;
+	}
+	public void setrediskey(String val) {
+		rediskey = val;
+	}
+	public String getcampkey() {
+		return campkey;
+	}
+	public void setcampkey(String val) {
+		campkey = val;
+	}
+	public String getredishost() {
+		return redishost;
+	}
+	public void setredishost(String val) {
+		redishost = val;
+	}
+	public int getredisport() {
+		return redisport;
+	}
+	public void setredisport(int val) {
+		redisport = val;
+	}
+	public String getredispass() {
+		return redispass;
+	}
+	public void setredispass(String val) {
+		redispass = val;
+	}
+	public int getcampaignrate1() {
+		return campaignrate1;
+	}
+	public void setcampaignrate1(int val) {
+		campaignrate1 = val;
+	}
+	public int getcampaignrate2() {
+		return campaignrate2;
+	}
+	public void setcampaignrate2(int val) {
+		campaignrate2 = val;
+	}
+	public int getcampaignrate3() {
+		return campaignrate3;
+	}
+	public void setcampaignrate3(int val) {
+		campaignrate3 = val;
+	}
+	public int getranum() {
+		return ranum;
+	}
+	public void setranum(int val) {
+		ranum = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public CampaignSwitchGetOfferLinkFromRedis() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String rediskey
+	In  : String campkey
+	In  : String redishost
+	In  : int redisport
+	In  : String redispass
+	Out : String campkey
+	Out : int campaignrate1
+	Out : int campaignrate2
+	Out : int campaignrate3
+	Out : int ranum
+* Available Variables: DO NOT MODIFY *****/
+Jedis jedis =  new Jedis(redishost,redisport,100000);
+jedis.auth(redispass);
+//Map map= new HashMap();
+//map=jedis.hgetAll(rediskey);
+//if(map.size()&gt;0){
+if(jedis.exists(rediskey)){
+Random rand =new Random();
+ranum=rand.nextInt(100)+1;
+String str3=jedis.hget(rediskey,"campaigngroup_rate3");
+str3=(str3.equals("")?"0":str3);
+campaignrate3=Integer.parseInt(str3!=null?str3:"0");
+if(campaignrate3!=0&amp;&amp;campaignrate3&gt;=ranum)
+{
+str3=jedis.hget(rediskey,"campaigngroup_rate1");
+str3=(str3.equals("")?"0":str3);
+campaignrate1=Integer.parseInt(str3!=null?str3:"0");
+str3=jedis.hget(rediskey,"campaigngroup_rate2");
+str3=(str3.equals("")?"0":str3);
+campaignrate2=Integer.parseInt(str3!=null?str3:"0");
+
+if(ranum &gt; campaignrate2)
+campkey=jedis.hget(rediskey,"campaigngroup_subid3"); 
+else if (ranum &gt; campaignrate1)
+campkey=jedis.hget(rediskey,"campaigngroup_subid2"); 
+else
+campkey=jedis.hget(rediskey,"campaigngroup_subid1"); 
+
+}
+}
+
+}
+}
+</fullsource>
+                <inputData>
+                    <row>
+                        <fieldName>rediskey</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>campkey</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>redishost</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>redisport</fieldName>
+                        <fieldType>int</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>redispass</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                </inputData>
+                <outputData>
+                    <row>
+                        <fieldName>campkey</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>campaignrate1</fieldName>
+                        <fieldType>int</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>campaignrate2</fieldName>
+                        <fieldType>int</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>campaignrate3</fieldName>
+                        <fieldType>int</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>ranum</fieldName>
+                        <fieldType>int</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                </outputData>
+                <byteCode>
+                    <class>
+                        <name>CampaignSwitchGetOfferLinkFromRedis</name>
+                        <byteCode>yv66vgAAADMAhAkAHwBQCQAfAFEJAB8AUgkAHwBTCQAfAFQJAB8AVQkAHwBWCQAfAFcJAB8AWAoAIABZCABaBwBbAwABhqAKAAwAXAoADABdCgAMAF4KAF8AYAcAYQoAEgBZCgASAGIIAGMKAAwAZAoAZQBmCABnCgBoAGkIAGoIAGsIAGwIAG0IAG4HAG8HAHABAAhyZWRpc2tleQEAEkxqYXZhL2xhbmcvU3RyaW5nOwEAB2NhbXBrZXkBAAlyZWRpc2hvc3QBAAlyZWRpc3BvcnQBAAFJAQAJcmVkaXNwYXNzAQANY2FtcGFpZ25yYXRlMQEADWNhbXBhaWducmF0ZTIBAA1jYW1wYWlnbnJhdGUzAQAFcmFudW0BAAtnZXRyZWRpc2tleQEAFCgpTGphdmEvbGFuZy9TdHJpbmc7AQAEQ29kZQEAD0xpbmVOdW1iZXJUYWJsZQEAC3NldHJlZGlza2V5AQAVKExqYXZhL2xhbmcvU3RyaW5nOylWAQAKZ2V0Y2FtcGtleQEACnNldGNhbXBrZXkBAAxnZXRyZWRpc2hvc3QBAAxzZXRyZWRpc2hvc3QBAAxnZXRyZWRpc3BvcnQBAAMoKUkBAAxzZXRyZWRpc3BvcnQBAAQoSSlWAQAMZ2V0cmVkaXNwYXNzAQAMc2V0cmVkaXNwYXNzAQAQZ2V0Y2FtcGFpZ25yYXRlMQEAEHNldGNhbXBhaWducmF0ZTEBABBnZXRjYW1wYWlnbnJhdGUyAQAQc2V0Y2FtcGFpZ25yYXRlMgEAEGdldGNhbXBhaWducmF0ZTMBABBzZXRjYW1wYWlnbnJhdGUzAQAIZ2V0cmFudW0BAAhzZXRyYW51bQEABjxpbml0PgEAAygpVgEABmludm9rZQEADVN0YWNrTWFwVGFibGUHAFsHAGEHAHEHAG8BAApFeGNlcHRpb25zBwByAQAKU291cmNlRmlsZQEAKENhbXBhaWduU3dpdGNoR2V0T2ZmZXJMaW5rRnJvbVJlZGlzLmphdmEMACEAIgwAIwAiDAAkACIMACUAJgwAJwAiDAAoACYMACkAJgwAKgAmDAArACYMAEQARQEAAAEAGXJlZGlzL2NsaWVudHMvamVkaXMvSmVkaXMMAEQAcwwAdAB1DAB2AHcHAHgMAHkAegEAEGphdmEvdXRpbC9SYW5kb20MAHsAfAEAE2NhbXBhaWduZ3JvdXBfcmF0ZTMMAH0AfgcAcQwAfwCAAQABMAcAgQwAggCDAQATY2FtcGFpZ25ncm91cF9yYXRlMQEAE2NhbXBhaWduZ3JvdXBfcmF0ZTIBABRjYW1wYWlnbmdyb3VwX3N1YmlkMwEAFGNhbXBhaWduZ3JvdXBfc3ViaWQyAQAUY2FtcGFpZ25ncm91cF9zdWJpZDEBAERTdWJQcm9jZXNzL0xldmVsMS9DYW1wYWlnblN3aXRjaC9DYW1wYWlnblN3aXRjaEdldE9mZmVyTGlua0Zyb21SZWRpcwEAEGphdmEvbGFuZy9PYmplY3QBABBqYXZhL2xhbmcvU3RyaW5nAQATamF2YS9sYW5nL0V4Y2VwdGlvbgEAFyhMamF2YS9sYW5nL1N0cmluZztJSSlWAQAEYXV0aAEAJihMamF2YS9sYW5nL1N0cmluZzspTGphdmEvbGFuZy9TdHJpbmc7AQAGZXhpc3RzAQAnKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL0Jvb2xlYW47AQARamF2YS9sYW5nL0Jvb2xlYW4BAAxib29sZWFuVmFsdWUBAAMoKVoBAAduZXh0SW50AQAEKEkpSQEABGhnZXQBADgoTGphdmEvbGFuZy9TdHJpbmc7TGphdmEvbGFuZy9TdHJpbmc7KUxqYXZhL2xhbmcvU3RyaW5nOwEABmVxdWFscwEAFShMamF2YS9sYW5nL09iamVjdDspWgEAEWphdmEvbGFuZy9JbnRlZ2VyAQAIcGFyc2VJbnQBABUoTGphdmEvbGFuZy9TdHJpbmc7KUkAIQAfACAAAAAJAAQAIQAiAAAABAAjACIAAAAEACQAIgAAAAQAJQAmAAAABAAnACIAAAAEACgAJgAAAAQAKQAmAAAABAAqACYAAAAEACsAJgAAABQAAQAsAC0AAQAuAAAAHQABAAEAAAAFKrQAAbAAAAABAC8AAAAGAAEAAAARAAEAMAAxAAEALgAAACIAAgACAAAABiortQABsQAAAAEALwAAAAoAAgAAABQABQAVAAEAMgAtAAEALgAAAB0AAQABAAAABSq0AAKwAAAAAQAvAAAABgABAAAAFwABADMAMQABAC4AAAAiAAIAAgAAAAYqK7UAArEAAAABAC8AAAAKAAIAAAAaAAUAGwABADQALQABAC4AAAAdAAEAAQAAAAUqtAADsAAAAAEALwAAAAYAAQAAAB0AAQA1ADEAAQAuAAAAIgACAAIAAAAGKiu1AAOxAAAAAQAvAAAACgACAAAAIAAFACEAAQA2ADcAAQAuAAAAHQABAAEAAAAFKrQABKwAAAABAC8AAAAGAAEAAAAjAAEAOAA5AAEALgAAACIAAgACAAAABiobtQAEsQAAAAEALwAAAAoAAgAAACYABQAnAAEAOgAtAAEALgAAAB0AAQABAAAABSq0AAWwAAAAAQAvAAAABgABAAAAKQABADsAMQABAC4AAAAiAAIAAgAAAAYqK7UABbEAAAABAC8AAAAKAAIAAAAsAAUALQABADwANwABAC4AAAAdAAEAAQAAAAUqtAAGrAAAAAEALwAAAAYAAQAAAC8AAQA9ADkAAQAuAAAAIgACAAIAAAAGKhu1AAaxAAAAAQAvAAAACgACAAAAMgAFADMAAQA+ADcAAQAuAAAAHQABAAEAAAAFKrQAB6wAAAABAC8AAAAGAAEAAAA1AAEAPwA5AAEALgAAACIAAgACAAAABiobtQAHsQAAAAEALwAAAAoAAgAAADgABQA5AAEAQAA3AAEALgAAAB0AAQABAAAABSq0AAisAAAAAQAvAAAABgABAAAAOwABAEEAOQABAC4AAAAiAAIAAgAAAAYqG7UACLEAAAABAC8AAAAKAAIAAAA+AAUAPwABAEIANwABAC4AAAAdAAEAAQAAAAUqtAAJrAAAAAEALwAAAAYAAQAAAEEAAQBDADkAAQAuAAAAIgACAAIAAAAGKhu1AAmxAAAAAQAvAAAACgACAAAARAAFAEUAAQBEAEUAAQAuAAAAdgACAAEAAAA2KrcACioSC7UAASoSC7UAAioSC7UAAyoDtQAEKhILtQAFKgO1AAYqA7UAByoDtQAIKgO1AAmxAAAAAQAvAAAALgALAAAARwAEAAcACgAIABAACQAWAAoAGwALACEADAAmAA0AKwAOADAADwA1AEgAAQBGAEUAAgAuAAACAAAFAAQAAAEauwAMWSq0AAMqtAAEEg23AA5MKyq0AAW2AA9XKyq0AAG2ABC2ABGZAPO7ABJZtwATTSosEGS2ABQEYLUACSsqtAABEhW2ABZOLRILtgAXmQAIEhinAAQtTiotxgAHLacABRIYuAAZtQAIKrQACJkArCq0AAgqtAAJoQChKyq0AAESGrYAFk4tEgu2ABeZAAgSGKcABC1OKi3GAActpwAFEhi4ABm1AAYrKrQAARIbtgAWTi0SC7YAF5kACBIYpwAELU4qLcYABy2nAAUSGLgAGbUAByq0AAkqtAAHpAAUKisqtAABEhy2ABa1AAKnAC0qtAAJKrQABqQAFCorKrQAARIdtgAWtQACpwARKisqtAABEh62ABa1AAKxAAAAAgAvAAAAVgAVAAAAVgASAFcAGwBbACkAXAAxAF0APQBeAEgAXwBYAGAAaQBhAHsAYwCGAGQAlgBlAKcAZgCyAGcAwgBoANMAagDeAGsA7wBsAPoAbQELAG8BGQB0AEcAAAB4AA/+AFYHAEgHAEkHAEpABwBKSQcAS/8AAQAEBwBLBwBIBwBJBwBKAAIHAEsHAEowQAcASkkHAEv/AAEABAcASwcASAcASQcASgACBwBLBwBKHkAHAEpJBwBL/wABAAQHAEsHAEgHAEkHAEoAAgcASwcASiEb+QANAEwAAAAEAAEATQABAE4AAAACAE8=</byteCode>
+                    </class>
+                </byteCode>
+            </config>
+            <pd:inputBindings>
+                <javaCodeActivityInput>
+                    <rediskey>
+                        <xsl:value-of select="concat(&quot;campaigngroup-&quot;,$Start/root/campaign_id)"/>
+                    </rediskey>
+                    <xsl:if test="$Start/root/campaign_id">
+                        <campkey>
+                            <xsl:value-of select="$Start/root/campaign_id"/>
+                        </campkey>
+                    </xsl:if>
+                    <redishost>
+                        <xsl:value-of select="$_globalVariables/ns:GlobalVariables/Redis/host"/>
+                    </redishost>
+                    <redisport>
+                        <xsl:value-of select="$_globalVariables/ns:GlobalVariables/Redis/port"/>
+                    </redisport>
+                    <redispass>
+                        <xsl:value-of select="$_globalVariables/ns:GlobalVariables/Redis/pass"/>
+                    </redispass>
+                </javaCodeActivityInput>
+            </pd:inputBindings>
+        </pd:activity>
+    </pd:group>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>Rethrow</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Group</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Group</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>$Start/root/disable=1</pd:xpath>
+    </pd:transition>
+</pd:ProcessDefinition>

@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:ns2="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns1="http://www.tibco.com/pe/EngineTypes" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema" xmlns:ns3="http://www.tibco.com/pe/DeployedVarsType" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:pfx="http://www.tibco.com/ns/no_namespace_schema_location/SubProcess/RedisData.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xsd:import namespace="http://www.tibco.com/ns/no_namespace_schema_location/SubProcess/RedisData.xsd" schemaLocation="/SubProcess/RedisData.xsd"/>
+    <pd:name>MainProcess/ImpSub.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="paramstr" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="xff" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="headerua" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="datetime" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="clickts" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>58</pd:startX>
+    <pd:startY>36</pd:startY>
+    <pd:returnBindings>
+        <ClickSubEnd>
+            <JMSClickLog>
+                <xsl:copy-of select="$GenClickID/root/ClickMessage"/>
+                <xsl:if test="$SetCountAndLog/root/replaced_offer_click_tl">
+                    <replaced_offer_click_tl>
+                        <xsl:value-of select="$SetCountAndLog/root/replaced_offer_click_tl"/>
+                    </replaced_offer_click_tl>
+                </xsl:if>
+                <eventname>
+                    <xsl:value-of select="&quot;click&quot;"/>
+                </eventname>
+                <xsl:if test="$CombineJson/root/lastjson">
+                    <lastjson>
+                        <xsl:value-of select="$CombineJson/root/lastjson"/>
+                    </lastjson>
+                </xsl:if>
+                <xsl:if test="$GetCampData/RedisData_Click/offer_active_event">
+                    <offer_active_event>
+                        <xsl:value-of select="$GetCampData/RedisData_Click/offer_active_event"/>
+                    </offer_active_event>
+                </xsl:if>
+            </JMSClickLog>
+            <xsl:if test="$Start/root/paramstr">
+                <paramstr>
+                    <xsl:value-of select="$Start/root/paramstr"/>
+                </paramstr>
+            </xsl:if>
+            <offer_click_tl>
+                <xsl:value-of select="$GetCampData/RedisData_Click/offer_click_tl"/>
+            </offer_click_tl>
+            <xsl:if test="$FetchParameter/GetAllParamEnd/mode">
+                <mode>
+                    <xsl:value-of select="$FetchParameter/GetAllParamEnd/mode"/>
+                </mode>
+            </xsl:if>
+            <product_lp>
+                <xsl:value-of select="$GetCampData/RedisData_Click/product_lp"/>
+            </product_lp>
+            <offer_synctype>
+                <xsl:value-of select="$GetCampData/RedisData_Click/offer_synctype"/>
+            </offer_synctype>
+            <xsl:if test="$GetCampData/RedisData_Click/offer_active_event">
+                <offer_active_event>
+                    <xsl:value-of select="$GetCampData/RedisData_Click/offer_active_event"/>
+                </offer_active_event>
+            </xsl:if>
+        </ClickSubEnd>
+    </pd:returnBindings>
+    <pd:endName>ConcatAllContentsAsResponse</pd:endName>
+    <pd:endType/>
+    <pd:endX>375</pd:endX>
+    <pd:endY>49</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1472233940811</pd:targetNamespace>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>656</pd:x>
+        <pd:y>50</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Rethrow">
+        <pd:type>com.tibco.pe.core.RethrowActivity</pd:type>
+        <pd:resourceType>ae.activities.rethrow</pd:resourceType>
+        <pd:x>664</pd:x>
+        <pd:y>181</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="FetchParameter">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>62</pd:x>
+        <pd:y>160</pd:y>
+        <config>
+            <processName>/SubProcess/Level1/FetchParameter.process</processName>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <xsl:if test="$Start/root/paramstr">
+                    <paramstr>
+                        <xsl:value-of select="$Start/root/paramstr"/>
+                    </paramstr>
+                </xsl:if>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="GetCampData">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>90</pd:x>
+        <pd:y>296</pd:y>
+        <config>
+            <processName>/SubProcess/Level1/CampaignData_Click.process</processName>
+            <spawn>false</spawn>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <campkey>
+                    <xsl:value-of select="concat(&#xA;&quot;camp-&quot;,&#xA;$FetchParameter/GetAllParamEnd/campaign_id&#xA;)"/>
+                </campkey>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="SetCountAndLog">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:description>clickid :
+
+concat($campaignswitch/root/offer_id,"c",$campaignswitch/root/n_id,"_",$GenerateAllParams/javaCodeActivityOutput/cid,"_",$TimeStamp/root/UnixTime)</pd:description>
+        <pd:x>377</pd:x>
+        <pd:y>305</pd:y>
+        <config>
+            <processName>/MainProcess/GetLog_Imp.process</processName>
+            <spawn>false</spawn>
+        </config>
+        <pd:inputBindings>
+            <cep_log_imp>
+                <xsl:copy-of select="$GenClickID/root/ImpMessage"/>
+                <eventname>
+                    <xsl:value-of select="&quot;imp&quot;"/>
+                </eventname>
+                <xsl:if test="$CombineJson/root/lastjson">
+                    <lastjson>
+                        <xsl:value-of select="$CombineJson/root/lastjson"/>
+                    </lastjson>
+                </xsl:if>
+            </cep_log_imp>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="CombineJson">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>260</pd:x>
+        <pd:y>303</pd:y>
+        <config>
+            <processName>/SubProcess/Level1/CombineJson.process</processName>
+            <spawn>false</spawn>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <json1>
+                    <xsl:value-of select="tib:substring-before-last(substring-after($HeaderJson/root/jsonStr, '&quot;HeaderJson_Imp&quot;:'),'}')"/>
+                </json1>
+                <json2>
+                    <xsl:value-of select="$FetchParameter/GetAllParamEnd/parameterjson"/>
+                </json2>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="HeaderJson">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>261</pd:x>
+        <pd:y>169</pd:y>
+        <config>
+            <processName>/SubProcess/Level1/XmlToJson_Imp.process</processName>
+            <spawn>false</spawn>
+        </config>
+        <pd:inputBindings>
+            <HeaderJson_Imp>
+                <campaign_id>
+                    <xsl:value-of select="$GenClickID/root/ImpMessage/campaign_id"/>
+                </campaign_id>
+                <xsl:if test="$GenClickID/root/ImpMessage/product_appid">
+                    <appid>
+                        <xsl:value-of select="$GenClickID/root/ImpMessage/product_appid"/>
+                    </appid>
+                </xsl:if>
+                <imp_day>
+                    <xsl:value-of select="$GenClickID/root/ImpMessage/imp_day"/>
+                </imp_day>
+                <imp_sec>
+                    <xsl:value-of select="$GenClickID/root/ImpMessage/imp_sec"/>
+                </imp_sec>
+                <imp_ts>
+                    <xsl:value-of select="$GenClickID/root/ImpMessage/imp_ts"/>
+                </imp_ts>
+                <xsl:if test="$GenClickID/root/click_ts10">
+                    <imp_ts10>
+                        <xsl:value-of select="$GenClickID/root/click_ts10"/>
+                    </imp_ts10>
+                </xsl:if>
+                <xsl:if test="$GenClickID/root/ImpMessage/product_id">
+                    <product_id>
+                        <xsl:value-of select="$GenClickID/root/ImpMessage/product_id"/>
+                    </product_id>
+                </xsl:if>
+                <offer_id>
+                    <xsl:value-of select="$GenClickID/root/ImpMessage/offer_id"/>
+                </offer_id>
+                <xsl:if test="$GenClickID/root/ImpMessage/n_id">
+                    <n_id>
+                        <xsl:value-of select="$GenClickID/root/ImpMessage/n_id"/>
+                    </n_id>
+                </xsl:if>
+                <xsl:if test="$GenClickID/root/device">
+                    <device>
+                        <xsl:value-of select="$GenClickID/root/device"/>
+                    </device>
+                </xsl:if>
+                <xsl:if test="$GenClickID/root/os_v">
+                    <os_v>
+                        <xsl:value-of select="$GenClickID/root/os_v"/>
+                    </os_v>
+                </xsl:if>
+                <xsl:if test="$GenClickID/root/xff">
+                    <ip>
+                        <xsl:value-of select="$GenClickID/root/xff"/>
+                    </ip>
+                </xsl:if>
+                <xsl:if test="$GenClickID/root/headerua">
+                    <ua>
+                        <xsl:value-of select="$GenClickID/root/headerua"/>
+                    </ua>
+                </xsl:if>
+            </HeaderJson_Imp>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Generate Error">
+        <pd:type>com.tibco.pe.core.GenerateErrorActivity</pd:type>
+        <pd:resourceType>ae.activities.throw</pd:resourceType>
+        <pd:x>87</pd:x>
+        <pd:y>435</pd:y>
+        <config>
+            <faultName/>
+        </config>
+        <pd:inputBindings>
+            <ns:ActivityInput>
+                <message>
+                    <xsl:value-of select="concat(&#xA;&quot;CEP SSL Click Error : ,,1 is coming.&#xA;&#xA;Input is : &quot;,&#xA;$Start/root&#xA;)"/>
+                </message>
+            </ns:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="GenClickID">
+        <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
+        <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
+        <pd:x>263</pd:x>
+        <pd:y>48</pd:y>
+        <config>
+            <element>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="xff" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="headerua" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="datetime" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="click_ts10" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="device" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="os_v" type="xsd:string" minOccurs="0"/>
+                            <xsd:element ref="pfx:ImpMessage" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </element>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <xsl:if test="$Start/root/xff">
+                    <xff>
+                        <xsl:value-of select="$Start/root/xff"/>
+                    </xff>
+                </xsl:if>
+                <xsl:if test="$Start/root/headerua">
+                    <headerua>
+                        <xsl:value-of select="$Start/root/headerua"/>
+                    </headerua>
+                </xsl:if>
+                <xsl:if test="$Start/root/datetime">
+                    <datetime>
+                        <xsl:value-of select="$Start/root/datetime"/>
+                    </datetime>
+                </xsl:if>
+                <xsl:if test="$SplitTS/root/ts10">
+                    <click_ts10>
+                        <xsl:value-of select="$SplitTS/root/ts10"/>
+                    </click_ts10>
+                </xsl:if>
+                <xsl:if test="$Gen_device_os_v/root/device">
+                    <device>
+                        <xsl:value-of select="$Gen_device_os_v/root/device"/>
+                    </device>
+                </xsl:if>
+                <xsl:if test="$Gen_device_os_v/root/os_v">
+                    <os_v>
+                        <xsl:value-of select="$Gen_device_os_v/root/os_v"/>
+                    </os_v>
+                </xsl:if>
+                <ImpMessage>
+                    <xsl:if test="$SplitTS/root/clickday">
+                        <imp_day>
+                            <xsl:value-of select="$SplitTS/root/clickday"/>
+                        </imp_day>
+                    </xsl:if>
+                    <xsl:if test="$SplitTS/root/clicksec">
+                        <imp_sec>
+                            <xsl:value-of select="$SplitTS/root/clicksec"/>
+                        </imp_sec>
+                    </xsl:if>
+                    <xsl:if test="$SplitTS/root/click_ts">
+                        <imp_ts>
+                            <xsl:value-of select="$SplitTS/root/click_ts"/>
+                        </imp_ts>
+                    </xsl:if>
+                    <xsl:if test="$GetCampData/RedisData_Click/campaign_id">
+                        <campaign_id>
+                            <xsl:value-of select="$GetCampData/RedisData_Click/campaign_id"/>
+                        </campaign_id>
+                    </xsl:if>
+                    <xsl:if test="$GetCampData/RedisData_Click/offer_id">
+                        <offer_id>
+                            <xsl:value-of select="$GetCampData/RedisData_Click/offer_id"/>
+                        </offer_id>
+                    </xsl:if>
+                    <xsl:if test="$GetCampData/RedisData_Click/n_id">
+                        <n_id>
+                            <xsl:value-of select="$GetCampData/RedisData_Click/n_id"/>
+                        </n_id>
+                    </xsl:if>
+                    <xsl:if test="$GetCampData/RedisData_Click/product_id">
+                        <product_id>
+                            <xsl:value-of select="$GetCampData/RedisData_Click/product_id"/>
+                        </product_id>
+                    </xsl:if>
+                    <xsl:if test="$GetCampData/RedisData_Click/product_appid">
+                        <product_appid>
+                            <xsl:value-of select="$GetCampData/RedisData_Click/product_appid"/>
+                        </product_appid>
+                    </xsl:if>
+                </ImpMessage>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="SplitTS">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>159</pd:x>
+        <pd:y>168</pd:y>
+        <config>
+            <processName>/SubProcess/Level2/ClicktsSplit.process</processName>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <clickts>
+                    <xsl:value-of select="$Start/root/clickts"/>
+                </clickts>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Gen_device_os_v">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>158</pd:x>
+        <pd:y>48</pd:y>
+        <config>
+            <processName>/SubProcess/Level3/Gen_os_os_v.process</processName>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <xsl:choose>
+                    <xsl:when test="$FetchParameter/GetAllParamEnd/urlua!=&quot;&quot;">
+                        <xsl:if test="$FetchParameter/GetAllParamEnd/urlua">
+                            <urlua>
+                                <xsl:value-of select="$FetchParameter/GetAllParamEnd/urlua"/>
+                            </urlua>
+                        </xsl:if>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <urlua>
+                            <xsl:value-of select="$Start/root/headerua"/>
+                        </urlua>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>Rethrow</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>FetchParameter</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>FetchParameter</pd:from>
+        <pd:to>GetCampData</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>CombineJson</pd:from>
+        <pd:to>SetCountAndLog</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>HeaderJson</pd:from>
+        <pd:to>CombineJson</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SetCountAndLog</pd:from>
+        <pd:to>ConcatAllContentsAsResponse</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GetCampData</pd:from>
+        <pd:to>SplitTS</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>$GetCampData/RedisData_Click/campaign_id &gt; 0</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SplitTS</pd:from>
+        <pd:to>Gen_device_os_v</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GenClickID</pd:from>
+        <pd:to>HeaderJson</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Gen_device_os_v</pd:from>
+        <pd:to>GenClickID</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GetCampData</pd:from>
+        <pd:to>Generate Error</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

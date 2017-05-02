@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions">
+    <pd:name>SubProcess/Level2/ClicktsSplit.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="clickts" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="disable" type="xsd:int" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>150</pd:startX>
+    <pd:startY>64</pd:startY>
+    <pd:returnBindings>
+        <root>
+            <xsl:if test="$ClicktsSplit/javaCodeActivityOutput/clickday">
+                <clickday>
+                    <xsl:value-of select="$ClicktsSplit/javaCodeActivityOutput/clickday"/>
+                </clickday>
+            </xsl:if>
+            <xsl:if test="$ClicktsSplit/javaCodeActivityOutput/clicksec">
+                <clicksec>
+                    <xsl:value-of select="$ClicktsSplit/javaCodeActivityOutput/clicksec"/>
+                </clicksec>
+            </xsl:if>
+            <xsl:if test="$ClicktsSplit/javaCodeActivityOutput/out">
+                <dayThour>
+                    <xsl:value-of select="$ClicktsSplit/javaCodeActivityOutput/out"/>
+                </dayThour>
+            </xsl:if>
+            <ts10>
+                <xsl:value-of select="substring($Start/root/clickts, 1,10)"/>
+            </ts10>
+            <xsl:if test="$Start/root/clickts">
+                <click_ts>
+                    <xsl:value-of select="$Start/root/clickts"/>
+                </click_ts>
+            </xsl:if>
+        </root>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="clickday" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="clicksec" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="dayThour" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="ts10" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="click_ts" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>280</pd:endX>
+    <pd:endY>186</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1488791741547</pd:targetNamespace>
+    <pd:activity name="ClicktsSplit">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>283</pd:x>
+        <pd:y>64</pd:y>
+        <config>
+            <fileName>ClicktsSplitClicktsSplit</fileName>
+            <packageName>SubProcess.Level2.ClicktsSplit</packageName>
+            <fullsource>package SubProcess.Level2.ClicktsSplit;
+import java.util.*;
+import java.io.*;
+public class ClicktsSplitClicktsSplit{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String clickts = "";
+	protected String clickday = "";
+	protected String clicksec = "";
+	protected String out = "";
+	public String getclickts() {
+		return clickts;
+	}
+	public void setclickts(String val) {
+		clickts = val;
+	}
+	public String getclickday() {
+		return clickday;
+	}
+	public void setclickday(String val) {
+		clickday = val;
+	}
+	public String getclicksec() {
+		return clicksec;
+	}
+	public void setclicksec(String val) {
+		clicksec = val;
+	}
+	public String getout() {
+		return out;
+	}
+	public void setout(String val) {
+		out = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public ClicktsSplitClicktsSplit() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String clickts
+	Out : String clickday
+	Out : String clicksec
+	Out : String out
+* Available Variables: DO NOT MODIFY *****/
+
+Long timestamp = Long.parseLong(clickts);
+
+ out = new java.text.SimpleDateFormat("yyyy-MM-dd HH").format(new java.util.Date(timestamp));   
+out=out.replace(" ","T");
+
+ clickday = new java.text.SimpleDateFormat("yyyyMMdd").format(new java.util.Date(timestamp));   
+ clicksec = new java.text.SimpleDateFormat("HHmmss").format(new java.util.Date(timestamp));   
+}
+}
+</fullsource>
+            <inputData>
+                <row>
+                    <fieldName>clickts</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <outputData>
+                <row>
+                    <fieldName>clickday</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>clicksec</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>out</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <byteCode>
+                <class>
+                    <name>ClicktsSplitClicktsSplit</name>
+                    <byteCode>yv66vgAAADMAVQkAFQAvCQAVADAJABUAMQkAFQAyCgAWADMIADQKADUANgoANQA3BwA4CAA5CgAJADoHADsKADUAPAoADAA9CgAJAD4IAD8IAEAKAEEAQggAQwgARAcARQcARgEAB2NsaWNrdHMBABJMamF2YS9sYW5nL1N0cmluZzsBAAhjbGlja2RheQEACGNsaWNrc2VjAQADb3V0AQAKZ2V0Y2xpY2t0cwEAFCgpTGphdmEvbGFuZy9TdHJpbmc7AQAEQ29kZQEAD0xpbmVOdW1iZXJUYWJsZQEACnNldGNsaWNrdHMBABUoTGphdmEvbGFuZy9TdHJpbmc7KVYBAAtnZXRjbGlja2RheQEAC3NldGNsaWNrZGF5AQALZ2V0Y2xpY2tzZWMBAAtzZXRjbGlja3NlYwEABmdldG91dAEABnNldG91dAEABjxpbml0PgEAAygpVgEABmludm9rZQEACkV4Y2VwdGlvbnMHAEcBAApTb3VyY2VGaWxlAQAdQ2xpY2t0c1NwbGl0Q2xpY2t0c1NwbGl0LmphdmEMABcAGAwAGQAYDAAaABgMABsAGAwAKAApAQAABwBIDABJAEoMAEsATAEAGmphdmEvdGV4dC9TaW1wbGVEYXRlRm9ybWF0AQANeXl5eS1NTS1kZCBISAwAKAAhAQAOamF2YS91dGlsL0RhdGUMAE0ATgwAKABPDABQAFEBAAEgAQABVAcAUgwAUwBUAQAIeXl5eU1NZGQBAAZISG1tc3MBADdTdWJQcm9jZXNzL0xldmVsMi9DbGlja3RzU3BsaXQvQ2xpY2t0c1NwbGl0Q2xpY2t0c1NwbGl0AQAQamF2YS9sYW5nL09iamVjdAEAE2phdmEvbGFuZy9FeGNlcHRpb24BAA5qYXZhL2xhbmcvTG9uZwEACXBhcnNlTG9uZwEAFShMamF2YS9sYW5nL1N0cmluZzspSgEAB3ZhbHVlT2YBABMoSilMamF2YS9sYW5nL0xvbmc7AQAJbG9uZ1ZhbHVlAQADKClKAQAEKEopVgEABmZvcm1hdAEAJChMamF2YS91dGlsL0RhdGU7KUxqYXZhL2xhbmcvU3RyaW5nOwEAEGphdmEvbGFuZy9TdHJpbmcBAAdyZXBsYWNlAQBEKExqYXZhL2xhbmcvQ2hhclNlcXVlbmNlO0xqYXZhL2xhbmcvQ2hhclNlcXVlbmNlOylMamF2YS9sYW5nL1N0cmluZzsAIQAVABYAAAAEAAQAFwAYAAAABAAZABgAAAAEABoAGAAAAAQAGwAYAAAACgABABwAHQABAB4AAAAdAAEAAQAAAAUqtAABsAAAAAEAHwAAAAYAAQAAAAsAAQAgACEAAQAeAAAAIgACAAIAAAAGKiu1AAGxAAAAAQAfAAAACgACAAAADgAFAA8AAQAiAB0AAQAeAAAAHQABAAEAAAAFKrQAArAAAAABAB8AAAAGAAEAAAARAAEAIwAhAAEAHgAAACIAAgACAAAABiortQACsQAAAAEAHwAAAAoAAgAAABQABQAVAAEAJAAdAAEAHgAAAB0AAQABAAAABSq0AAOwAAAAAQAfAAAABgABAAAAFwABACUAIQABAB4AAAAiAAIAAgAAAAYqK7UAA7EAAAABAB8AAAAKAAIAAAAaAAUAGwABACYAHQABAB4AAAAdAAEAAQAAAAUqtAAEsAAAAAEAHwAAAAYAAQAAAB0AAQAnACEAAQAeAAAAIgACAAIAAAAGKiu1AASxAAAAAQAfAAAACgACAAAAIAAFACEAAQAoACkAAQAeAAAASQACAAEAAAAdKrcABSoSBrUAASoSBrUAAioSBrUAAyoSBrUABLEAAAABAB8AAAAaAAYAAAAjAAQABgAKAAcAEAAIABYACQAcACQAAQAqACkAAgAeAAAAmAAGAAIAAABsKrQAAbgAB7gACEwquwAJWRIKtwALuwAMWSu2AA23AA62AA+1AAQqKrQABBIQEhG2ABK1AAQquwAJWRITtwALuwAMWSu2AA23AA62AA+1AAIquwAJWRIUtwALuwAMWSu2AA23AA62AA+1AAOxAAAAAQAfAAAAGgAGAAAALQALAC8AJgAwADUAMgBQADMAawA0ACsAAAAEAAEALAABAC0AAAACAC4=</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput>
+                <xsl:choose>
+                    <xsl:when test="string-length($Start/root/clickts)=10">
+                        <xsl:if test="$Start/root/clickts">
+                            <clickts>
+                                <xsl:value-of select="concat($Start/root/clickts,&#xA;&quot;000&quot;)"/>
+                            </clickts>
+                        </xsl:if>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:if test="$Start/root/clickts">
+                            <clickts>
+                                <xsl:value-of select="$Start/root/clickts"/>
+                            </clickts>
+                        </xsl:if>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </javaCodeActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>483</pd:x>
+        <pd:y>67</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Rethrow">
+        <pd:type>com.tibco.pe.core.RethrowActivity</pd:type>
+        <pd:resourceType>ae.activities.rethrow</pd:resourceType>
+        <pd:x>484</pd:x>
+        <pd:y>184</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>ClicktsSplit</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>ClicktsSplit</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>$Start/root/disable=1</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>Rethrow</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <pd:name>SubProcess/Level3/RandomIdfa.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startX>150</pd:startX>
+    <pd:startY>64</pd:startY>
+    <pd:returnBindings>
+        <root>
+            <xsl:if test="$GenIdfa/javaCodeActivityOutput/randomidfa">
+                <randomidfa>
+                    <xsl:value-of select="$GenIdfa/javaCodeActivityOutput/randomidfa"/>
+                </randomidfa>
+            </xsl:if>
+        </root>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="randomidfa" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>450</pd:endX>
+    <pd:endY>64</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1488512401853</pd:targetNamespace>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>102</pd:x>
+        <pd:y>149</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Rethrow">
+        <pd:type>com.tibco.pe.core.RethrowActivity</pd:type>
+        <pd:resourceType>ae.activities.rethrow</pd:resourceType>
+        <pd:x>317</pd:x>
+        <pd:y>148</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="GenIdfa">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>290</pd:x>
+        <pd:y>64</pd:y>
+        <config>
+            <fileName>RandomIdfaGenIdfa</fileName>
+            <packageName>SubProcess.Level3.RandomIdfa</packageName>
+            <fullsource>package SubProcess.Level3.RandomIdfa;
+import java.util.*;
+import java.io.*;
+public class RandomIdfaGenIdfa{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String randomidfa = "";
+	public String getrandomidfa() {
+		return randomidfa;
+	}
+	public void setrandomidfa(String val) {
+		randomidfa = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public RandomIdfaGenIdfa() {
+	}
+
+
+	public static StringBuffer GenRridfa() {
+		StringBuffer ridfa = new StringBuffer("");
+		ridfa.append(GenChars(8));
+		ridfa.append("-");
+		ridfa.append(GenChars(4));
+		ridfa.append("-");
+		ridfa.append(GenChars(4));
+		ridfa.append("-");
+		ridfa.append(GenChars(4));
+		ridfa.append("-");
+		ridfa.append(GenChars(12));
+		return ridfa;
+	}
+
+	public static StringBuffer GenChars(int max) {
+		StringBuffer buf = new StringBuffer("");
+		String allstr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		Random rand = new Random();
+		int rannum = 0;
+		for (int i = 0; i &lt; max; i++) {
+			rannum = rand.nextInt(36);
+			buf.append(allstr.charAt(rannum));
+		}
+		return buf;
+	}
+
+
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	Out : String randomidfa
+* Available Variables: DO NOT MODIFY *****/
+randomidfa=GenRridfa().toString();
+}
+}
+</fullsource>
+            <inputData/>
+            <outputData>
+                <row>
+                    <fieldName>randomidfa</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <byteCode>
+                <class>
+                    <name>RandomIdfaGenIdfa</name>
+                    <byteCode>yv66vgAAADMASQkAEgArCgATACwIAC0HAC4KAAQALwoAEgAwCgAEADEIADIKAAQAMwgANAcANQoACwAsCgALADYKADcAOAoABAA5CgASADoKAAQAOwcAPAcAPQEACnJhbmRvbWlkZmEBABJMamF2YS9sYW5nL1N0cmluZzsBAA1nZXRyYW5kb21pZGZhAQAUKClMamF2YS9sYW5nL1N0cmluZzsBAARDb2RlAQAPTGluZU51bWJlclRhYmxlAQANc2V0cmFuZG9taWRmYQEAFShMamF2YS9sYW5nL1N0cmluZzspVgEABjxpbml0PgEAAygpVgEACUdlblJyaWRmYQEAGigpTGphdmEvbGFuZy9TdHJpbmdCdWZmZXI7AQAIR2VuQ2hhcnMBABsoSSlMamF2YS9sYW5nL1N0cmluZ0J1ZmZlcjsBAA1TdGFja01hcFRhYmxlBwAuBwA+BwA1AQAGaW52b2tlAQAKRXhjZXB0aW9ucwcAPwEAClNvdXJjZUZpbGUBABZSYW5kb21JZGZhR2VuSWRmYS5qYXZhDAAUABUMABwAHQEAAAEAFmphdmEvbGFuZy9TdHJpbmdCdWZmZXIMABwAGwwAIAAhDABAAEEBAAEtDABAAEIBACRBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWjAxMjM0NTY3ODkBABBqYXZhL3V0aWwvUmFuZG9tDABDAEQHAD4MAEUARgwAQABHDAAeAB8MAEgAFwEALlN1YlByb2Nlc3MvTGV2ZWwzL1JhbmRvbUlkZmEvUmFuZG9tSWRmYUdlbklkZmEBABBqYXZhL2xhbmcvT2JqZWN0AQAQamF2YS9sYW5nL1N0cmluZwEAE2phdmEvbGFuZy9FeGNlcHRpb24BAAZhcHBlbmQBADIoTGphdmEvbGFuZy9TdHJpbmdCdWZmZXI7KUxqYXZhL2xhbmcvU3RyaW5nQnVmZmVyOwEALChMamF2YS9sYW5nL1N0cmluZzspTGphdmEvbGFuZy9TdHJpbmdCdWZmZXI7AQAHbmV4dEludAEABChJKUkBAAZjaGFyQXQBAAQoSSlDAQAbKEMpTGphdmEvbGFuZy9TdHJpbmdCdWZmZXI7AQAIdG9TdHJpbmcAIQASABMAAAABAAQAFAAVAAAABgABABYAFwABABgAAAAdAAEAAQAAAAUqtAABsAAAAAEAGQAAAAYAAQAAAAgAAQAaABsAAQAYAAAAIgACAAIAAAAGKiu1AAGxAAAAAQAZAAAACgACAAAACwAFAAwAAQAcAB0AAQAYAAAAKwACAAEAAAALKrcAAioSA7UAAbEAAAABABkAAAAOAAMAAAAOAAQABgAKAA8ACQAeAB8AAQAYAAAAlwADAAEAAABXuwAEWRIDtwAFSyoQCLgABrYAB1cqEgi2AAlXKge4AAa2AAdXKhIItgAJVyoHuAAGtgAHVyoSCLYACVcqB7gABrYAB1cqEgi2AAlXKhAMuAAGtgAHVyqwAAAAAQAZAAAALgALAAAAEwAKABQAFAAVABsAFgAkABcAKwAYADQAGQA7ABoARAAbAEsAHABVAB0ACQAgACEAAQAYAAAAkgADAAYAAAA8uwAEWRIDtwAFTBIKTbsAC1m3AAxOAzYEAzYFFQUaogAcLRAktgANNgQrLBUEtgAOtgAPV4QFAaf/5CuwAAAAAgAZAAAAJgAJAAAAIQAKACIADQAjABUAJAAYACUAIQAmACkAJwA0ACUAOgApACIAAAAYAAL/ABsABgEHACMHACQHACUBAQAA+gAeAAEAJgAdAAIAGAAAACcAAgABAAAACyq4ABC2ABG1AAGxAAAAAQAZAAAACgACAAAAMQAKADIAJwAAAAQAAQAoAAEAKQAAAAIAKg==</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput/>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>Rethrow</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>GenIdfa</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GenIdfa</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

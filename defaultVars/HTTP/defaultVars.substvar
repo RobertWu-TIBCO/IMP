@@ -1,0 +1,37 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<repository xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance" xmlns = "http://www.tibco.com/xmlns/repo/types/2002">
+	<globalVariables>
+		<globalVariable>
+			<name>clickport</name>
+			<value>9094</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>Integer</type>
+			<modTime>1490950798783</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>clicksslport</name>
+			<value>443</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>Integer</type>
+			<modTime>1490950798797</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>eventport</name>
+			<value>9095</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>Integer</type>
+			<modTime>1490846920290</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>host</name>
+			<value>localhost</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1490846947324</modTime>
+		</globalVariable>
+	</globalVariables>
+</repository>

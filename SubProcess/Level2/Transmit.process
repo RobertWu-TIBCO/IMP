@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <pd:name>SubProcess/Level2/Transmit.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="campaign_id" type="xsd:int" minOccurs="0"/>
+                    <xsd:element name="campaign_postevent_parameter" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="campaign_conversion_prameter" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="clickday" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="strtocheck" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="clicktoconversion" type="xsd:int" minOccurs="0"/>
+                    <xsd:element name="collectionname" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="operation" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="clickid" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>150</pd:startX>
+    <pd:startY>64</pd:startY>
+    <pd:returnBindings>
+        <root/>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="isDup" type="xsd:int" minOccurs="0"/>
+                    <xsd:element name="matchResult" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>450</pd:endX>
+    <pd:endY>64</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1488512401853</pd:targetNamespace>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>102</pd:x>
+        <pd:y>149</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Rethrow">
+        <pd:type>com.tibco.pe.core.RethrowActivity</pd:type>
+        <pd:resourceType>ae.activities.rethrow</pd:resourceType>
+        <pd:x>317</pd:x>
+        <pd:y>148</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="CheckMongoTransmit">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>290</pd:x>
+        <pd:y>64</pd:y>
+        <config>
+            <fileName>TransmitCheckMongoTransmit</fileName>
+            <packageName>SubProcess.Level2.Transmit</packageName>
+            <fullsource>package SubProcess.Level2.Transmit;
+import java.util.*;
+import java.io.*;
+public class TransmitCheckMongoTransmit{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected int campaign_id = 0;
+	protected int randomresult = 0;
+	public int getcampaign_id() {
+		return campaign_id;
+	}
+	public void setcampaign_id(int val) {
+		campaign_id = val;
+	}
+	public int getrandomresult() {
+		return randomresult;
+	}
+	public void setrandomresult(int val) {
+		randomresult = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public TransmitCheckMongoTransmit() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : int campaign_id
+	Out : int randomresult
+* Available Variables: DO NOT MODIFY *****/
+
+}
+}
+</fullsource>
+            <outputData>
+                <row>
+                    <fieldName>randomresult</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <inputData>
+                <row>
+                    <fieldName>campaign_id</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <byteCode>
+                <class>
+                    <name>TransmitCheckMongoTransmit</name>
+                    <byteCode>yv66vgAAADMAHgkABAAYCQAEABkKAAUAGgcAGwcAHAEAC2NhbXBhaWduX2lkAQABSQEADHJhbmRvbXJlc3VsdAEADmdldGNhbXBhaWduX2lkAQADKClJAQAEQ29kZQEAD0xpbmVOdW1iZXJUYWJsZQEADnNldGNhbXBhaWduX2lkAQAEKEkpVgEAD2dldHJhbmRvbXJlc3VsdAEAD3NldHJhbmRvbXJlc3VsdAEABjxpbml0PgEAAygpVgEABmludm9rZQEACkV4Y2VwdGlvbnMHAB0BAApTb3VyY2VGaWxlAQAfVHJhbnNtaXRDaGVja01vbmdvVHJhbnNtaXQuamF2YQwABgAHDAAIAAcMABEAEgEANVN1YlByb2Nlc3MvTGV2ZWwyL1RyYW5zbWl0L1RyYW5zbWl0Q2hlY2tNb25nb1RyYW5zbWl0AQAQamF2YS9sYW5nL09iamVjdAEAE2phdmEvbGFuZy9FeGNlcHRpb24AIQAEAAUAAAACAAQABgAHAAAABAAIAAcAAAAGAAEACQAKAAEACwAAAB0AAQABAAAABSq0AAGsAAAAAQAMAAAABgABAAAACQABAA0ADgABAAsAAAAiAAIAAgAAAAYqG7UAAbEAAAABAAwAAAAKAAIAAAAMAAUADQABAA8ACgABAAsAAAAdAAEAAQAAAAUqtAACrAAAAAEADAAAAAYAAQAAAA8AAQAQAA4AAQALAAAAIgACAAIAAAAGKhu1AAKxAAAAAQAMAAAACgACAAAAEgAFABMAAQARABIAAQALAAAAMwACAAEAAAAPKrcAAyoDtQABKgO1AAKxAAAAAQAMAAAAEgAEAAAAFQAEAAYACQAHAA4AFgABABMAEgACAAsAAAAZAAAAAQAAAAGxAAAAAQAMAAAABgABAAAAHQAUAAAABAABABUAAQAWAAAAAgAX</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput/>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>Rethrow</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>CheckMongoTransmit</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>CheckMongoTransmit</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

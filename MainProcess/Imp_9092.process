@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns1="http://xmlns.tibco.com/encodings/mime" xmlns:ns="http://xmlns.tibco.com/bw/plugin-api/messages/context" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ns12="www.tibco.com/plugin/java/JavaMethodActivityInput">
+    <pd:name>MainProcess/Imp_9092.process</pd:name>
+    <pd:startName>HandleImpRequest</pd:startName>
+    <pd:startX>0</pd:startX>
+    <pd:startY>0</pd:startY>
+    <pd:returnBindings/>
+    <pd:starter name="HandleImpRequest">
+        <pd:type>com.tibco.plugin.http.HTTPEventSource</pd:type>
+        <pd:resourceType>httppalette.httpEventSource</pd:resourceType>
+        <pd:x>75</pd:x>
+        <pd:y>252</pd:y>
+        <config>
+            <outputMode>String</outputMode>
+            <defaultEncoding>ISO8859_1</defaultEncoding>
+            <inputOutputVersion>5.3.0</inputOutputVersion>
+            <newMimeSupport>true</newMimeSupport>
+            <sharedChannel>/MainProcess/Imp9092.sharedhttp</sharedChannel>
+            <Headers>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="User-Agent" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="X-Forwarded-For" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="X-Real-IP" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Accept" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Accept-Charset" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Accept-Encoding" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Accept-Language" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Referer" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Length" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Connection" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                            <xsd:element name="Cookie" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </Headers>
+        </config>
+        <pd:inputBindings/>
+    </pd:starter>
+    <pd:endName>End</pd:endName>
+    <pd:endX>525</pd:endX>
+    <pd:endY>57</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1472233940811</pd:targetNamespace>
+    <pd:activity name="ReplacedUrl">
+        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
+        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
+        <pd:x>350</pd:x>
+        <pd:y>255</pd:y>
+        <config>
+            <closeConnection>true</closeConnection>
+            <eventSource>HandleImpRequest</eventSource>
+            <Headers>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </Headers>
+        </config>
+        <pd:inputBindings>
+            <ResponseActivityInput>
+                <asciiContent>
+                    <xsl:value-of select="&quot;pixel&quot;"/>
+                </asciiContent>
+            </ResponseActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="ImpSub">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>530</pd:x>
+        <pd:y>254</pd:y>
+        <config>
+            <processName>/MainProcess/ImpSub.process</processName>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <paramstr>
+                    <xsl:value-of select="$judgeUrl/root/QueryString"/>
+                </paramstr>
+                <xsl:choose>
+                    <xsl:when test="$HandleImpRequest/ProcessStarterOutput/Headers/X-Real-IP!=&quot;&quot;">
+                        <xff>
+                            <xsl:value-of select="$HandleImpRequest/ProcessStarterOutput/Headers/X-Real-IP"/>
+                        </xff>
+                    </xsl:when>
+                    <xsl:when test="$HandleImpRequest/ProcessStarterOutput/Headers/X-Forwarded-For!=&quot;&quot;">
+                        <xff>
+                            <xsl:value-of select="$HandleImpRequest/ProcessStarterOutput/Headers/X-Forwarded-For"/>
+                        </xff>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xff>
+                            <xsl:value-of select="$HandleImpRequest/ProcessStarterOutput/ns:Context/RemoteAddress"/>
+                        </xff>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <xsl:if test="$HandleImpRequest/ProcessStarterOutput/Headers/User-Agent">
+                    <headerua>
+                        <xsl:value-of select="$HandleImpRequest/ProcessStarterOutput/Headers/User-Agent"/>
+                    </headerua>
+                </xsl:if>
+                <datetime>
+                    <xsl:value-of select="current-dateTime()"/>
+                </datetime>
+                <clickts>
+                    <xsl:value-of select="tib:timestamp()"/>
+                </clickts>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>667</pd:x>
+        <pd:y>368</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="AnyErrorResponse">
+        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
+        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
+        <pd:x>666</pd:x>
+        <pd:y>59</pd:y>
+        <config>
+            <closeConnection>true</closeConnection>
+            <eventSource>HandleImpRequest</eventSource>
+            <Headers>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </Headers>
+        </config>
+        <pd:inputBindings>
+            <ResponseActivityInput>
+                <asciiContent>
+                    <xsl:value-of select="&quot;exception&quot;"/>
+                </asciiContent>
+            </ResponseActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="ErrorUrl">
+        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
+        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
+        <pd:x>194</pd:x>
+        <pd:y>58</pd:y>
+        <config>
+            <closeConnection>true</closeConnection>
+            <eventSource>HandleImpRequest</eventSource>
+            <Headers>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </Headers>
+        </config>
+        <pd:inputBindings>
+            <ResponseActivityInput>
+                <asciiContent>
+                    <xsl:value-of select="'error url'"/>
+                </asciiContent>
+            </ResponseActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="SendAlertMail">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:description>tib:render-xml($Catch)
+
+$Catch/exceptiondata/*</pd:description>
+        <pd:x>665</pd:x>
+        <pd:y>206</pd:y>
+        <config>
+            <processName>/SubProcess/Level2/SendErrorImp.process</processName>
+            <spawn>true</spawn>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <subjectandcontent>
+                    <xsl:value-of select="concat(&#xA;tib:render-xml($Catch),&#xA;&quot;&#xA;&#xA;http input : &#xA;&#xA;&quot;,&#xA;tib:render-xml($HandleImpRequest)&#xA;)"/>
+                </subjectandcontent>
+                <subject>
+                    <xsl:value-of select="&quot;IMP Listener Error&quot;"/>
+                </subject>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="judgeUrl">
+        <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
+        <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
+        <pd:description>substring-before(substring-after($HandleClickRequest/ProcessStarterOutput/RequestURI, 'offer_id'),"&amp;amp;n_id")!="" and substring-before(substring-after($HandleClickRequest/ProcessStarterOutput/RequestURI, 'n_id'),"&amp;amp;")!=""
+
+campaign id or n id,offer id exists
+
+2017-03-22 :
+
+substring-after($HandleClickRequest/ProcessStarterOutput/RequestURI, 'campaign_id=')
+
+lan to use QueryString</pd:description>
+        <pd:x>195</pd:x>
+        <pd:y>253</pd:y>
+        <config>
+            <element>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="QueryString" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </element>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <xsl:if test="$HandleImpRequest/ProcessStarterOutput/QueryString">
+                    <QueryString>
+                        <xsl:value-of select="$HandleImpRequest/ProcessStarterOutput/QueryString"/>
+                    </QueryString>
+                </xsl:if>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>SendAlertMail</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>AnyErrorResponse</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>ErrorUrl</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>HandleImpRequest</pd:from>
+        <pd:to>judgeUrl</pd:to>
+        <pd:xpathDescription/>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>ImpSub</pd:from>
+        <pd:to>End</pd:to>
+        <pd:xpathDescription/>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SendAlertMail</pd:from>
+        <pd:to>AnyErrorResponse</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>judgeUrl</pd:from>
+        <pd:to>ErrorUrl</pd:to>
+        <pd:xpathDescription>empty</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>judgeUrl</pd:from>
+        <pd:to>ReplacedUrl</pd:to>
+        <pd:xpathDescription>not empty</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>contains($HandleImpRequest/ProcessStarterOutput/RequestURI, "/imp")
+and
+substring-after($judgeUrl/root/QueryString, "campaign_id=")!=""</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>ReplacedUrl</pd:from>
+        <pd:to>ImpSub</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

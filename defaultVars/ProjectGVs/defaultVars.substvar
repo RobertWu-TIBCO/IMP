@@ -1,0 +1,29 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<repository xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance" xmlns = "http://www.tibco.com/xmlns/repo/types/2002">
+	<globalVariables>
+		<globalVariable>
+			<name>mailfrom</name>
+			<value>robertwu@91mobcastle.com</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1488521115920</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>mailto</name>
+			<value>1533661890@qq.com,wuyang19920118@163.com,wangwenjun@mobiexchanger.com,wangjianwen@mobiexchanger.com,wuyang@mobiexchanger.com</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1490950798806</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>projectName</name>
+			<value>CEP</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1488521002162</modTime>
+		</globalVariable>
+	</globalVariables>
+</repository>

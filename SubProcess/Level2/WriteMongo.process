@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <pd:name>SubProcess/Level2/WriteMongo.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="dbname" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="collectionname" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="operation" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="inputjson" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>150</pd:startX>
+    <pd:startY>64</pd:startY>
+    <pd:returnBindings>
+        <root/>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="isDup" type="xsd:int" minOccurs="0"/>
+                    <xsd:element name="matchResult" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>450</pd:endX>
+    <pd:endY>64</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1488512401853</pd:targetNamespace>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>102</pd:x>
+        <pd:y>149</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Rethrow">
+        <pd:type>com.tibco.pe.core.RethrowActivity</pd:type>
+        <pd:resourceType>ae.activities.rethrow</pd:resourceType>
+        <pd:x>317</pd:x>
+        <pd:y>148</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="WriteMongo">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>290</pd:x>
+        <pd:y>64</pd:y>
+        <config>
+            <fileName>WriteMongoWriteMongo</fileName>
+            <packageName>SubProcess.Level2.WriteMongo</packageName>
+            <fullsource>package SubProcess.Level2.WriteMongo;
+import java.util.*;
+import net.sf.json.JSONObject;  
+import java.io.*;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoException;
+import com.mongodb.WriteConcern;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.DBCursor;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+import java.util.Arrays;
+
+public class WriteMongoWriteMongo{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String dbname = "";
+	protected String collectionname = "";
+	protected String operation = "";
+	protected String inputjson = "";
+	public String getdbname() {
+		return dbname;
+	}
+	public void setdbname(String val) {
+		dbname = val;
+	}
+	public String getcollectionname() {
+		return collectionname;
+	}
+	public void setcollectionname(String val) {
+		collectionname = val;
+	}
+	public String getoperation() {
+		return operation;
+	}
+	public void setoperation(String val) {
+		operation = val;
+	}
+	public String getinputjson() {
+		return inputjson;
+	}
+	public void setinputjson(String val) {
+		inputjson = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public WriteMongoWriteMongo() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String dbname
+	In  : String collectionname
+	In  : String operation
+	In  : String inputjson
+* Available Variables: DO NOT MODIFY *****/
+MongoClient mongoClient = null;
+	      try{   
+         // To connect to mongodb server
+          mongoClient = new MongoClient( "172.17.0.6" , 27017 );
+         // Now connect to your databases
+         @SuppressWarnings("deprecation")
+         DB db = mongoClient.getDB(dbname);
+         DBCollection getCollection=db.getCollection(collectionname);
+		getCollection.insert((DBObject)com.mongodb.util.JSON.parse(inputjson));
+         System.out.println("\n insert to mongo  " + collectionname + " with value "  + inputjson );
+	//mongoClient.close();
+      }catch(Exception e){
+         System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+	
+      }finally{
+            if(mongoClient!=null){
+                mongoClient.close();
+            }
+}
+
+
+
+}
+}
+</fullsource>
+            <outputData/>
+            <inputData>
+                <row>
+                    <fieldName>dbname</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>collectionname</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>operation</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>inputjson</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <byteCode>
+                <class>
+                    <name>WriteMongoWriteMongo</name>
+                    <byteCode>yv66vgAAADMAfAkAHgA8CQAeAD0JAB4APgkAHgA/CgAfAEAIAEEHAEIIAEMKAAcARAoABwBFCgBGAEcHAEgKAEkASgoASwBMCQBNAE4HAE8KABAAQAgAUAoAEABRCABSCgAQAFMKAFQAVQoABwBWBwBXCQBNAFgKAB8AWQoAWgBbCABcCgAYAF0HAF4HAF8BAAZkYm5hbWUBABJMamF2YS9sYW5nL1N0cmluZzsBAA5jb2xsZWN0aW9ubmFtZQEACW9wZXJhdGlvbgEACWlucHV0anNvbgEACWdldGRibmFtZQEAFCgpTGphdmEvbGFuZy9TdHJpbmc7AQAEQ29kZQEAD0xpbmVOdW1iZXJUYWJsZQEACXNldGRibmFtZQEAFShMamF2YS9sYW5nL1N0cmluZzspVgEAEWdldGNvbGxlY3Rpb25uYW1lAQARc2V0Y29sbGVjdGlvbm5hbWUBAAxnZXRvcGVyYXRpb24BAAxzZXRvcGVyYXRpb24BAAxnZXRpbnB1dGpzb24BAAxzZXRpbnB1dGpzb24BAAY8aW5pdD4BAAMoKVYBAAZpbnZva2UBAA1TdGFja01hcFRhYmxlBwBeBwBCBwBXBwBgAQAKRXhjZXB0aW9ucwEAClNvdXJjZUZpbGUBABlXcml0ZU1vbmdvV3JpdGVNb25nby5qYXZhDAAgACEMACIAIQwAIwAhDAAkACEMADEAMgEAAAEAF2NvbS9tb25nb2RiL01vbmdvQ2xpZW50AQAKMTcyLjE3LjAuNgwAMQBhDABiAGMHAGQMAGUAZgEAFGNvbS9tb25nb2RiL0RCT2JqZWN0BwBnDABoAGkHAGoMAGsAbAcAbQwAbgBvAQAXamF2YS9sYW5nL1N0cmluZ0J1aWxkZXIBABMKIGluc2VydCB0byBtb25nbyAgDABwAHEBAAwgd2l0aCB2YWx1ZSAMAHIAJgcAcwwAdAAqDAB1ADIBABNqYXZhL2xhbmcvRXhjZXB0aW9uDAB2AG8MAHcAeAcAeQwAegAmAQACOiAMAHsAJgEAMVN1YlByb2Nlc3MvTGV2ZWwyL1dyaXRlTW9uZ28vV3JpdGVNb25nb1dyaXRlTW9uZ28BABBqYXZhL2xhbmcvT2JqZWN0AQATamF2YS9sYW5nL1Rocm93YWJsZQEAFihMamF2YS9sYW5nL1N0cmluZztJKVYBAAVnZXREQgEAJChMamF2YS9sYW5nL1N0cmluZzspTGNvbS9tb25nb2RiL0RCOwEADmNvbS9tb25nb2RiL0RCAQANZ2V0Q29sbGVjdGlvbgEALihMamF2YS9sYW5nL1N0cmluZzspTGNvbS9tb25nb2RiL0RCQ29sbGVjdGlvbjsBABVjb20vbW9uZ29kYi91dGlsL0pTT04BAAVwYXJzZQEAJihMamF2YS9sYW5nL1N0cmluZzspTGphdmEvbGFuZy9PYmplY3Q7AQAYY29tL21vbmdvZGIvREJDb2xsZWN0aW9uAQAGaW5zZXJ0AQAyKFtMY29tL21vbmdvZGIvREJPYmplY3Q7KUxjb20vbW9uZ29kYi9Xcml0ZVJlc3VsdDsBABBqYXZhL2xhbmcvU3lzdGVtAQADb3V0AQAVTGphdmEvaW8vUHJpbnRTdHJlYW07AQAGYXBwZW5kAQAtKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL1N0cmluZ0J1aWxkZXI7AQAIdG9TdHJpbmcBABNqYXZhL2lvL1ByaW50U3RyZWFtAQAHcHJpbnRsbgEABWNsb3NlAQADZXJyAQAIZ2V0Q2xhc3MBABMoKUxqYXZhL2xhbmcvQ2xhc3M7AQAPamF2YS9sYW5nL0NsYXNzAQAHZ2V0TmFtZQEACmdldE1lc3NhZ2UAIQAeAB8AAAAEAAQAIAAhAAAABAAiACEAAAAEACMAIQAAAAQAJAAhAAAACgABACUAJgABACcAAAAdAAEAAQAAAAUqtAABsAAAAAEAKAAAAAYAAQAAABoAAQApACoAAQAnAAAAIgACAAIAAAAGKiu1AAGxAAAAAQAoAAAACgACAAAAHQAFAB4AAQArACYAAQAnAAAAHQABAAEAAAAFKrQAArAAAAABACgAAAAGAAEAAAAgAAEALAAqAAEAJwAAACIAAgACAAAABiortQACsQAAAAEAKAAAAAoAAgAAACMABQAkAAEALQAmAAEAJwAAAB0AAQABAAAABSq0AAOwAAAAAQAoAAAABgABAAAAJgABAC4AKgABACcAAAAiAAIAAgAAAAYqK7UAA7EAAAABACgAAAAKAAIAAAApAAUAKgABAC8AJgABACcAAAAdAAEAAQAAAAUqtAAEsAAAAAEAKAAAAAYAAQAAACwAAQAwACoAAQAnAAAAIgACAAIAAAAGKiu1AASxAAAAAQAoAAAACgACAAAALwAFADAAAQAxADIAAQAnAAAASQACAAEAAAAdKrcABSoSBrUAASoSBrUAAioSBrUAAyoSBrUABLEAAAABACgAAAAaAAYAAAAyAAQAFQAKABYAEAAXABYAGAAcADMAAQAzADIAAgAnAAABQQAFAAUAAACqAUy7AAdZEggRaYm3AAlMKyq0AAG2AApNLCq0AAK2AAtOLQS9AAxZAyq0AAS4AA3AAAxTtgAOV7IAD7sAEFm3ABESErYAEyq0AAK2ABMSFLYAEyq0AAS2ABO2ABW2ABYrxgBJK7YAF6cAQk2yABm7ABBZtwARLLYAGrYAG7YAExIctgATLLYAHbYAE7YAFbYAFivGABcrtgAXpwAQOgQrxgAHK7YAFxkEv7EABAACAF8AagAYAAIAXwCcAAAAagCRAJwAAACcAJ4AnAAAAAIAKAAAAD4ADwAAADsAAgA+AA8AQQAYAEIAIQBDADcARABfAEoAYwBLAGoARgBrAEcAkQBKAJUASwCcAEoAogBLAKkAUQA0AAAAIQAE/wBqAAIHADUHADYAAQcAN3EHADj+AAkAAAcAOPgAAgA5AAAABAABABgAAQA6AAAAAgA7</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <xsl:for-each select="$Start/root">
+                <javaCodeActivityInput>
+                    <xsl:if test="dbname">
+                        <dbname>
+                            <xsl:value-of select="dbname"/>
+                        </dbname>
+                    </xsl:if>
+                    <xsl:if test="collectionname">
+                        <collectionname>
+                            <xsl:value-of select="collectionname"/>
+                        </collectionname>
+                    </xsl:if>
+                    <xsl:if test="operation">
+                        <operation>
+                            <xsl:value-of select="operation"/>
+                        </operation>
+                    </xsl:if>
+                    <xsl:if test="inputjson">
+                        <inputjson>
+                            <xsl:value-of select="inputjson"/>
+                        </inputjson>
+                    </xsl:if>
+                </javaCodeActivityInput>
+            </xsl:for-each>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>Rethrow</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>WriteMongo</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>WriteMongo</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

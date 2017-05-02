@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/pe/DeployedVarsType" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx="http://www.tibco.com/ns/no_namespace_schema_location/SubProcess/RedisData.xsd">
+    <xsd:import namespace="http://www.tibco.com/ns/no_namespace_schema_location/SubProcess/RedisData.xsd" schemaLocation="/SubProcess/RedisData.xsd"/>
+    <pd:name>SubProcess/Level1/CampaignData_Click.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startDescription>notget = -1 means ssp</pd:startDescription>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="campkey" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="disable" type="xsd:boolean" minOccurs="0"/>
+                    <xsd:element name="eventname" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>70</pd:startX>
+    <pd:startY>78</pd:startY>
+    <pd:returnBindings>
+        <xsl:for-each select="$GetFromRedis/javaCodeActivityOutput">
+            <RedisData_Click>
+                <xsl:if test="campkey">
+                    <campkey>
+                        <xsl:value-of select="campkey"/>
+                    </campkey>
+                </xsl:if>
+                <xsl:if test="campaign_id">
+                    <campaign_id>
+                        <xsl:value-of select="campaign_id"/>
+                    </campaign_id>
+                </xsl:if>
+                <xsl:if test="offer_id">
+                    <offer_id>
+                        <xsl:value-of select="offer_id"/>
+                    </offer_id>
+                </xsl:if>
+                <xsl:if test="n_id">
+                    <n_id>
+                        <xsl:value-of select="n_id"/>
+                    </n_id>
+                </xsl:if>
+                <xsl:if test="product_id">
+                    <product_id>
+                        <xsl:value-of select="product_id"/>
+                    </product_id>
+                </xsl:if>
+                <xsl:if test="offer_click_tl">
+                    <offer_click_tl>
+                        <xsl:value-of select="offer_click_tl"/>
+                    </offer_click_tl>
+                </xsl:if>
+                <xsl:if test="product_appid">
+                    <product_appid>
+                        <xsl:value-of select="product_appid"/>
+                    </product_appid>
+                </xsl:if>
+                <xsl:if test="creative_list">
+                    <creative_list>
+                        <xsl:value-of select="creative_list"/>
+                    </creative_list>
+                </xsl:if>
+                <xsl:if test="product_lp">
+                    <product_lp>
+                        <xsl:value-of select="product_lp"/>
+                    </product_lp>
+                </xsl:if>
+                <xsl:if test="campaign_status">
+                    <campaign_status>
+                        <xsl:value-of select="campaign_status"/>
+                    </campaign_status>
+                </xsl:if>
+                <xsl:if test="campaign_rm">
+                    <campaign_rm>
+                        <xsl:value-of select="campaign_rm"/>
+                    </campaign_rm>
+                </xsl:if>
+                <xsl:if test="campaign_expend_t">
+                    <campaign_expend_t>
+                        <xsl:value-of select="campaign_expend_t"/>
+                    </campaign_expend_t>
+                </xsl:if>
+                <xsl:if test="campaign_expend_c">
+                    <campaign_expend_c>
+                        <xsl:value-of select="campaign_expend_c"/>
+                    </campaign_expend_c>
+                </xsl:if>
+                <xsl:if test="campaign_expend_n">
+                    <campaign_expend_n>
+                        <xsl:value-of select="campaign_expend_n"/>
+                    </campaign_expend_n>
+                </xsl:if>
+                <xsl:if test="seat">
+                    <seat>
+                        <xsl:value-of select="seat"/>
+                    </seat>
+                </xsl:if>
+                <xsl:if test="campaign_cap">
+                    <campaign_cap>
+                        <xsl:value-of select="campaign_cap"/>
+                    </campaign_cap>
+                </xsl:if>
+                <xsl:if test="offer_synctype">
+                    <offer_synctype>
+                        <xsl:value-of select="offer_synctype"/>
+                    </offer_synctype>
+                </xsl:if>
+                <xsl:if test="offer_active_event">
+                    <offer_active_event>
+                        <xsl:value-of select="offer_active_event"/>
+                    </offer_active_event>
+                </xsl:if>
+            </RedisData_Click>
+        </xsl:for-each>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType ref="pfx:RedisData_Click"/>
+    <pd:endX>288</pd:endX>
+    <pd:endY>276</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1481529034665</pd:targetNamespace>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>530</pd:x>
+        <pd:y>190</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Rethrow">
+        <pd:type>com.tibco.pe.core.RethrowActivity</pd:type>
+        <pd:resourceType>ae.activities.rethrow</pd:resourceType>
+        <pd:x>532</pd:x>
+        <pd:y>75</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:group name="Group">
+        <pd:type>com.tibco.pe.core.LoopGroup</pd:type>
+        <pd:resourceType>ae.process.group</pd:resourceType>
+        <pd:x>202</pd:x>
+        <pd:y>1</pd:y>
+        <pd:width>172</pd:width>
+        <pd:height>138</pd:height>
+        <pd:collapsedWidth>57</pd:collapsedWidth>
+        <pd:collapsedHeight>70</pd:collapsedHeight>
+        <pd:groupVariables/>
+        <pd:joinToggle>inherit</pd:joinToggle>
+        <config>
+            <pd:groupType>errorLoop</pd:groupType>
+            <pd:serializable>false</pd:serializable>
+            <pd:indexSlot>err</pd:indexSlot>
+            <pd:errorCondition>$err &gt; 2</pd:errorCondition>
+            <pd:suspendAfterErrorRetry>false</pd:suspendAfterErrorRetry>
+        </config>
+        <pd:inputBindings/>
+        <pd:expanded>true</pd:expanded>
+        <pd:transition>
+            <pd:from>start</pd:from>
+            <pd:to>GetFromRedis</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>GetFromRedis</pd:from>
+            <pd:to>end</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:activity name="GetFromRedis">
+            <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+            <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+            <pd:x>284</pd:x>
+            <pd:y>82</pd:y>
+            <config>
+                <fileName>CampaignData_ClickGetFromRedis</fileName>
+                <packageName>SubProcess.Level1.CampaignData_Click</packageName>
+                <fullsource>package SubProcess.Level1.CampaignData_Click;
+import java.util.*;
+import java.io.*;
+import redis.clients.jedis.Jedis;
+public class CampaignData_ClickGetFromRedis{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String campkey = "";
+	protected String redis_host = "";
+	protected int redis_port = 0;
+	protected String redis_pass = "";
+	protected String eventname = "";
+	protected String campaign_id = "";
+	protected String offer_id = "";
+	protected String n_id = "";
+	protected String product_id = "";
+	protected String offer_click_tl = "";
+	protected String product_appid = "";
+	protected String creative_list = "";
+	protected String product_lp = "";
+	protected String campaign_status = "";
+	protected String campaign_rm = "";
+	protected String campaign_expend_t = "";
+	protected String campaign_expend_c = "";
+	protected String campaign_expend_n = "";
+	protected String seat = "";
+	protected String campaign_cap = "";
+	protected String offer_synctype = "";
+	protected String offer_active_event = "";
+	public String getcampkey() {
+		return campkey;
+	}
+	public void setcampkey(String val) {
+		campkey = val;
+	}
+	public String getredis_host() {
+		return redis_host;
+	}
+	public void setredis_host(String val) {
+		redis_host = val;
+	}
+	public int getredis_port() {
+		return redis_port;
+	}
+	public void setredis_port(int val) {
+		redis_port = val;
+	}
+	public String getredis_pass() {
+		return redis_pass;
+	}
+	public void setredis_pass(String val) {
+		redis_pass = val;
+	}
+	public String geteventname() {
+		return eventname;
+	}
+	public void seteventname(String val) {
+		eventname = val;
+	}
+	public String getcampaign_id() {
+		return campaign_id;
+	}
+	public void setcampaign_id(String val) {
+		campaign_id = val;
+	}
+	public String getoffer_id() {
+		return offer_id;
+	}
+	public void setoffer_id(String val) {
+		offer_id = val;
+	}
+	public String getn_id() {
+		return n_id;
+	}
+	public void setn_id(String val) {
+		n_id = val;
+	}
+	public String getproduct_id() {
+		return product_id;
+	}
+	public void setproduct_id(String val) {
+		product_id = val;
+	}
+	public String getoffer_click_tl() {
+		return offer_click_tl;
+	}
+	public void setoffer_click_tl(String val) {
+		offer_click_tl = val;
+	}
+	public String getproduct_appid() {
+		return product_appid;
+	}
+	public void setproduct_appid(String val) {
+		product_appid = val;
+	}
+	public String getcreative_list() {
+		return creative_list;
+	}
+	public void setcreative_list(String val) {
+		creative_list = val;
+	}
+	public String getproduct_lp() {
+		return product_lp;
+	}
+	public void setproduct_lp(String val) {
+		product_lp = val;
+	}
+	public String getcampaign_status() {
+		return campaign_status;
+	}
+	public void setcampaign_status(String val) {
+		campaign_status = val;
+	}
+	public String getcampaign_rm() {
+		return campaign_rm;
+	}
+	public void setcampaign_rm(String val) {
+		campaign_rm = val;
+	}
+	public String getcampaign_expend_t() {
+		return campaign_expend_t;
+	}
+	public void setcampaign_expend_t(String val) {
+		campaign_expend_t = val;
+	}
+	public String getcampaign_expend_c() {
+		return campaign_expend_c;
+	}
+	public void setcampaign_expend_c(String val) {
+		campaign_expend_c = val;
+	}
+	public String getcampaign_expend_n() {
+		return campaign_expend_n;
+	}
+	public void setcampaign_expend_n(String val) {
+		campaign_expend_n = val;
+	}
+	public String getseat() {
+		return seat;
+	}
+	public void setseat(String val) {
+		seat = val;
+	}
+	public String getcampaign_cap() {
+		return campaign_cap;
+	}
+	public void setcampaign_cap(String val) {
+		campaign_cap = val;
+	}
+	public String getoffer_synctype() {
+		return offer_synctype;
+	}
+	public void setoffer_synctype(String val) {
+		offer_synctype = val;
+	}
+	public String getoffer_active_event() {
+		return offer_active_event;
+	}
+	public void setoffer_active_event(String val) {
+		offer_active_event = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public CampaignData_ClickGetFromRedis() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String campkey
+	In  : String redis_host
+	In  : int redis_port
+	In  : String redis_pass
+	In  : String eventname
+	Out : String campkey
+	Out : String campaign_id
+	Out : String offer_id
+	Out : String n_id
+	Out : String product_id
+	Out : String offer_click_tl
+	Out : String product_appid
+	Out : String creative_list
+	Out : String product_lp
+	Out : String campaign_status
+	Out : String campaign_rm
+	Out : String campaign_expend_t
+	Out : String campaign_expend_c
+	Out : String campaign_expend_n
+	Out : String seat
+	Out : String campaign_cap
+	Out : String offer_synctype
+	Out : String offer_active_event
+* Available Variables: DO NOT MODIFY *****/
+
+	Jedis jedis = new Jedis(redis_host, redis_port,100000);
+	jedis.auth(redis_pass);
+	Map map= new HashMap();
+	map=jedis.hgetAll(campkey);
+if(map.size()&gt;0){
+if(map.containsKey("campaign_id")){campaign_id=(String)map.get("campaign_id");}
+if(map.containsKey("offer_id")){offer_id=(String)map.get("offer_id");}
+if(map.containsKey("n_id")){n_id=(String)map.get("n_id");}
+if(map.containsKey("product_id")){product_id=(String)map.get("product_id");}
+if(map.containsKey("product_appid")){product_appid=(String)map.get("product_appid");}
+//if(map.containsKey("offer_click_tl")){offer_click_tl=(String)map.get("offer_click_tl");}
+//if(map.containsKey("product_appid")){product_appid=(String)map.get("product_appid");}
+//if(map.containsKey("creative_list")){creative_list=(String)map.get("creative_list");}
+//if(map.containsKey("product_lp")){product_lp=(String)map.get("product_lp");}
+//if(map.containsKey("campaign_status")){campaign_status=(String)map.get("campaign_status");}
+//if(map.containsKey("campaign_rm")){campaign_rm=(String)map.get("campaign_rm");}
+//if(map.containsKey("campaign_expend_t")){campaign_expend_t=(String)map.get("campaign_expend_t");}
+//if(map.containsKey("campaign_expend_c")){campaign_expend_c=(String)map.get("campaign_expend_c");}
+//if(map.containsKey("campaign_expend_n")){campaign_expend_n=(String)map.get("campaign_expend_n");}
+//if(map.containsKey("seat")){seat=(String)map.get("seat");}
+//if(map.containsKey("campaign_cap")){campaign_cap=(String)map.get("campaign_cap");}
+//if(map.containsKey("offer_synctype")){offer_synctype=(String)map.get("offer_synctype");}
+//if(map.containsKey("offer_active_event")){offer_active_event=(String)map.get("offer_active_event");}
+}}
+}
+</fullsource>
+                <inputData>
+                    <row>
+                        <fieldName>campkey</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>redis_host</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>redis_port</fieldName>
+                        <fieldType>int</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>redis_pass</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>eventname</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                </inputData>
+                <outputData>
+                    <row>
+                        <fieldName>campkey</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>campaign_id</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>offer_id</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>n_id</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>product_id</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>offer_click_tl</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>product_appid</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>creative_list</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>product_lp</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>campaign_status</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>campaign_rm</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>campaign_expend_t</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>campaign_expend_c</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>campaign_expend_n</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>seat</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>campaign_cap</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>offer_synctype</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>offer_active_event</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                </outputData>
+                <byteCode>
+                    <class>
+                        <name>CampaignData_ClickGetFromRedis</name>
+                        <byteCode>yv66vgAAADMArwkAKQB/CQApAIAJACkAgQkAKQCCCQApAIMJACkAhAkAKQCFCQApAIYJACkAhwkAKQCICQApAIkJACkAigkAKQCLCQApAIwJACkAjQkAKQCOCQApAI8JACkAkAkAKQCRCQApAJIJACkAkwkAKQCUCgAqAJUIAJYHAJcDAAGGoAoAGQCYCgAZAJkHAJoKAB0AlQoAGQCbCwCcAJ0IADILAJwAngsAnACfBwCgCAAzCAA0CAA1CAA3BwChBwCiAQAHY2FtcGtleQEAEkxqYXZhL2xhbmcvU3RyaW5nOwEACnJlZGlzX2hvc3QBAApyZWRpc19wb3J0AQABSQEACnJlZGlzX3Bhc3MBAAlldmVudG5hbWUBAAtjYW1wYWlnbl9pZAEACG9mZmVyX2lkAQAEbl9pZAEACnByb2R1Y3RfaWQBAA5vZmZlcl9jbGlja190bAEADXByb2R1Y3RfYXBwaWQBAA1jcmVhdGl2ZV9saXN0AQAKcHJvZHVjdF9scAEAD2NhbXBhaWduX3N0YXR1cwEAC2NhbXBhaWduX3JtAQARY2FtcGFpZ25fZXhwZW5kX3QBABFjYW1wYWlnbl9leHBlbmRfYwEAEWNhbXBhaWduX2V4cGVuZF9uAQAEc2VhdAEADGNhbXBhaWduX2NhcAEADm9mZmVyX3N5bmN0eXBlAQASb2ZmZXJfYWN0aXZlX2V2ZW50AQAKZ2V0Y2FtcGtleQEAFCgpTGphdmEvbGFuZy9TdHJpbmc7AQAEQ29kZQEAD0xpbmVOdW1iZXJUYWJsZQEACnNldGNhbXBrZXkBABUoTGphdmEvbGFuZy9TdHJpbmc7KVYBAA1nZXRyZWRpc19ob3N0AQANc2V0cmVkaXNfaG9zdAEADWdldHJlZGlzX3BvcnQBAAMoKUkBAA1zZXRyZWRpc19wb3J0AQAEKEkpVgEADWdldHJlZGlzX3Bhc3MBAA1zZXRyZWRpc19wYXNzAQAMZ2V0ZXZlbnRuYW1lAQAMc2V0ZXZlbnRuYW1lAQAOZ2V0Y2FtcGFpZ25faWQBAA5zZXRjYW1wYWlnbl9pZAEAC2dldG9mZmVyX2lkAQALc2V0b2ZmZXJfaWQBAAdnZXRuX2lkAQAHc2V0bl9pZAEADWdldHByb2R1Y3RfaWQBAA1zZXRwcm9kdWN0X2lkAQARZ2V0b2ZmZXJfY2xpY2tfdGwBABFzZXRvZmZlcl9jbGlja190bAEAEGdldHByb2R1Y3RfYXBwaWQBABBzZXRwcm9kdWN0X2FwcGlkAQAQZ2V0Y3JlYXRpdmVfbGlzdAEAEHNldGNyZWF0aXZlX2xpc3QBAA1nZXRwcm9kdWN0X2xwAQANc2V0cHJvZHVjdF9scAEAEmdldGNhbXBhaWduX3N0YXR1cwEAEnNldGNhbXBhaWduX3N0YXR1cwEADmdldGNhbXBhaWduX3JtAQAOc2V0Y2FtcGFpZ25fcm0BABRnZXRjYW1wYWlnbl9leHBlbmRfdAEAFHNldGNhbXBhaWduX2V4cGVuZF90AQAUZ2V0Y2FtcGFpZ25fZXhwZW5kX2MBABRzZXRjYW1wYWlnbl9leHBlbmRfYwEAFGdldGNhbXBhaWduX2V4cGVuZF9uAQAUc2V0Y2FtcGFpZ25fZXhwZW5kX24BAAdnZXRzZWF0AQAHc2V0c2VhdAEAD2dldGNhbXBhaWduX2NhcAEAD3NldGNhbXBhaWduX2NhcAEAEWdldG9mZmVyX3N5bmN0eXBlAQARc2V0b2ZmZXJfc3luY3R5cGUBABVnZXRvZmZlcl9hY3RpdmVfZXZlbnQBABVzZXRvZmZlcl9hY3RpdmVfZXZlbnQBAAY8aW5pdD4BAAMoKVYBAAZpbnZva2UBAA1TdGFja01hcFRhYmxlBwCXBwCjAQAKRXhjZXB0aW9ucwcApAEAClNvdXJjZUZpbGUBACNDYW1wYWlnbkRhdGFfQ2xpY2tHZXRGcm9tUmVkaXMuamF2YQwAKwAsDAAtACwMAC4ALwwAMAAsDAAxACwMADIALAwAMwAsDAA0ACwMADUALAwANgAsDAA3ACwMADgALAwAOQAsDAA6ACwMADsALAwAPAAsDAA9ACwMAD4ALAwAPwAsDABAACwMAEEALAwAQgAsDAB1AHYBAAABABlyZWRpcy9jbGllbnRzL2plZGlzL0plZGlzDAB1AKUMAKYApwEAEWphdmEvdXRpbC9IYXNoTWFwDACoAKkHAKMMAKoATAwAqwCsDACtAK4BABBqYXZhL2xhbmcvU3RyaW5nAQBDU3ViUHJvY2Vzcy9MZXZlbDEvQ2FtcGFpZ25EYXRhX0NsaWNrL0NhbXBhaWduRGF0YV9DbGlja0dldEZyb21SZWRp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</byteCode>
+                    </class>
+                </byteCode>
+            </config>
+            <pd:inputBindings>
+                <javaCodeActivityInput>
+                    <xsl:if test="$Start/root/campkey">
+                        <campkey>
+                            <xsl:value-of select="$Start/root/campkey"/>
+                        </campkey>
+                    </xsl:if>
+                    <redis_host>
+                        <xsl:value-of select="$_globalVariables/ns:GlobalVariables/Redis/host"/>
+                    </redis_host>
+                    <redis_port>
+                        <xsl:value-of select="$_globalVariables/ns:GlobalVariables/Redis/port"/>
+                    </redis_port>
+                    <redis_pass>
+                        <xsl:value-of select="$_globalVariables/ns:GlobalVariables/Redis/pass"/>
+                    </redis_pass>
+                    <xsl:if test="$Start/root/eventname">
+                        <eventname>
+                            <xsl:value-of select="$Start/root/eventname"/>
+                        </eventname>
+                    </xsl:if>
+                </javaCodeActivityInput>
+            </pd:inputBindings>
+        </pd:activity>
+    </pd:group>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>$Start/root/disable=1</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>Rethrow</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Group</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Group</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>
