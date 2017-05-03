@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://xmlns.tibco.com/bw/plugin-api/messages/context" xmlns:ns12="www.tibco.com/plugin/java/JavaMethodActivityInput" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ns1="http://xmlns.tibco.com/encodings/mime">
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://xmlns.tibco.com/bw/plugin-api/messages/context" xmlns:ns12="www.tibco.com/plugin/java/JavaMethodActivityInput" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ns1="http://xmlns.tibco.com/encodings/mime" xmlns:ns3="http://www.tibco.com/namespaces/tnt/plugins/file">
     <pd:name>MainProcess/Imp_9092.process</pd:name>
     <pd:startName>HandleImpRequest</pd:startName>
     <pd:startX>0</pd:startX>
@@ -49,7 +49,7 @@
     <pd:activity name="response">
         <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
         <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>350</pd:x>
+        <pd:x>436</pd:x>
         <pd:y>255</pd:y>
         <config>
             <closeConnection>true</closeConnection>
@@ -71,12 +71,9 @@
         <pd:inputBindings>
             <ResponseActivityInput>
                 <Headers>
-                    <StatusLine>
-                        <xsl:value-of select="&quot;HTTP/1.1 302 Moved Temporarily&quot;"/>
-                    </StatusLine>
-                    <Location>
-                        <xsl:value-of select="&quot;http://map.dxpmedia.com/cm/receive?dxp_p=miaozhendmp&amp;mzid=xmk5d0xNqyR7&quot;"/>
-                    </Location>
+                    <Content-Type>
+                        <xsl:value-of select="&quot;image/jpeg&quot;"/>
+                    </Content-Type>
                 </Headers>
             </ResponseActivityInput>
         </pd:inputBindings>
@@ -254,6 +251,22 @@ lan to use QueryString</pd:description>
             </root>
         </pd:inputBindings>
     </pd:activity>
+    <pd:activity name="ReadImpPic">
+        <pd:type>com.tibco.plugin.file.FileReadActivity</pd:type>
+        <pd:resourceType>ae.activities.FileReadActivity</pd:resourceType>
+        <pd:x>315</pd:x>
+        <pd:y>251</pd:y>
+        <config>
+            <encoding>binary</encoding>
+        </config>
+        <pd:inputBindings>
+            <ns3:ReadActivityInputClass>
+                <fileName>
+                    <xsl:value-of select="&quot;G:\SRAll\AllMayDay\2016-08-26\2017-03_Arch\IMP\imp.jpg&quot;"/>
+                </fileName>
+            </ns3:ReadActivityInputClass>
+        </pd:inputBindings>
+    </pd:activity>
     <pd:transition>
         <pd:from>Catch</pd:from>
         <pd:to>SendAlertMail</pd:to>
@@ -308,7 +321,7 @@ lan to use QueryString</pd:description>
     </pd:transition>
     <pd:transition>
         <pd:from>judgeUrl</pd:from>
-        <pd:to>response</pd:to>
+        <pd:to>ReadImpPic</pd:to>
         <pd:xpathDescription>not empty</pd:xpathDescription>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
@@ -320,6 +333,13 @@ substring-after($judgeUrl/root/QueryString, "campaign_id=")!=""</pd:xpath>
     <pd:transition>
         <pd:from>response</pd:from>
         <pd:to>ImpSub</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>ReadImpPic</pd:from>
+        <pd:to>response</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
