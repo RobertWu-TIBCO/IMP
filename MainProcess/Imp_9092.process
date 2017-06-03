@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://xmlns.tibco.com/bw/plugin-api/messages/context" xmlns:ns12="www.tibco.com/plugin/java/JavaMethodActivityInput" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ns1="http://xmlns.tibco.com/encodings/mime" xmlns:ns3="http://www.tibco.com/namespaces/tnt/plugins/file">
+<pd:ProcessDefinition xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns1="http://xmlns.tibco.com/encodings/mime" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://xmlns.tibco.com/bw/plugin-api/messages/context" xmlns:ns3="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ns12="www.tibco.com/plugin/java/JavaMethodActivityInput">
     <pd:name>MainProcess/Imp_9092.process</pd:name>
     <pd:startName>HandleImpRequest</pd:startName>
     <pd:startX>0</pd:startX>
@@ -70,6 +70,9 @@
         </config>
         <pd:inputBindings>
             <ResponseActivityInput>
+                <binaryContent>
+                    <xsl:value-of select="$ReadImpPic/ns3:ReadActivityOutputBinaryClass/fileContent/binaryContent"/>
+                </binaryContent>
                 <Headers>
                     <Content-Type>
                         <xsl:value-of select="&quot;image/jpeg&quot;"/>
@@ -262,7 +265,7 @@ lan to use QueryString</pd:description>
         <pd:inputBindings>
             <ns3:ReadActivityInputClass>
                 <fileName>
-                    <xsl:value-of select="&quot;G:\SRAll\AllMayDay\2016-08-26\2017-03_Arch\IMP\imp.jpg&quot;"/>
+                    <xsl:value-of select="&quot;/home/arch/IMP/imp.jpg&quot;"/>
                 </fileName>
             </ns3:ReadActivityInputClass>
         </pd:inputBindings>
